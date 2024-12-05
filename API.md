@@ -143,32 +143,3 @@ To retrieve user-specific data, including their palettes and activity history.
   ]
 }
 ```
-
----
-
-### **4. Color Code API**
-
-#### **Purpose**:
-To retrieve details of a specific color based on its ID.
-
-#### **Endpoint**:
-`GET /api/colors/{colorId}`
-
-#### **Request**:
-```http
-GET /api/colors/c1
-```
-
-#### **Response**:
-```json
-{
-  "colorId": "c1",
-  "rgb": [255, 87, 51],
-  "name": "Sunset Orange",
-  "relatedColors": [
-    { "id": "c2", "rgb": [255, 111, 97], "name": "Coral Red" },
-    { "id": "c3", "rgb": [255, 158, 128], "name": "Peach" }
-  ]
-}
-```
-
