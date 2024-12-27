@@ -1,11 +1,8 @@
-
-import mongoose, { Schema, Document } from "mongoose";
-
+import mongoose, { Schema } from "mongoose";
 export interface Color {
   rgb: [number, number, number];
 }
-
-export interface Palette extends Document {
+export interface Palette {
   paletteId: string;
   colors: Color[];
   createdAt: Date;

@@ -1,8 +1,7 @@
-
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import paletteRoutes from "./routes/paletteRoute";
+import paletteRoutes from "./routes/paletteRoutes";
 
 const app = express();
 

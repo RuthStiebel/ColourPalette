@@ -1,0 +1,104 @@
+import React, { useState } from "react";
+
+const App: React.FC = () => { //function App() 
+  // State to manage user input for keywords (comma-separated values)
+  const [keywords, setKeywords] = useState("");
+
+  // State to manage user input for the number of colors to generate (default: 5)
+  const [numColors, setNumColors] = useState(3);
+
+  // State to store the generated palette object retrieved from the API
+  const [palette, setPalette] = useState<any>(null);
+
+  const generatePalette = async () => {
+    const requestData = {
+      keywords: keywords ? keywords.split(",") : null,
+      numColors,
+      userId: "testUser123",
+    };
+
+    console.log("Request Data:", requestData); // Log the data being sent
+
+    try {
+      const response = await fetch("http://localhost:5000/api/palettes/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Response Data:", data); // Log the data received from the backend
+      setPalette(data);
+    } catch (error) {
+      console.error("Error generating palette:", error);
+    }
+  };
+  
+  return (
+    <div style={{ padding: "20px" }}>
+      {/* App Header */}
+      <h1>Generate Color Palette</h1>
+
+      {/* Input Section */}
+      <div>
+        {/* Input field for keywords */}
+        <input
+          type="text"
+          placeholder="Keywords (comma-separated)"
+          value={keywords}
+          onChange={(e) => setKeywords(e.target.value)}
+        />
+
+        {/* Input field for the number of colors*/}
+        <input
+          type="number"
+          min="1"
+          max="10"
+          value={numColors}
+          onChange={(e) => setNumColors(Number(e.target.value))}
+        />
+
+        {/* Button to trigger palette generation */}
+        <button onClick={generatePalette}>Generate</button>
+      </div>
+
+      {/* Display Section */}
+      {palette && (
+        <div>
+          {/* Display the palette name */}
+          <h2>Palette: {palette.paletteName}</h2>
+
+          {/* Display the palette colors as colored squares */}
+          <div style={{ display: "flex", gap: "10px" }}>
+            {palette.colors.map((color: any, index: number) => (
+              <div
+                key={index}
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  backgroundColor: `rgb(${color.rgb.join(",")})`, // Convert RGB array to CSS rgb format
+                }}
+              ></div>
+            ))}
+          </div>
+
+          {/* Display the palette's generation history */}
+          <h3>History:</h3>
+          <ul>
+            {palette.history.map((entry: string, index: number) => (
+              <li key={index}>{entry}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
