@@ -5,49 +5,62 @@ body {
 }
 
 .container {
+  max-width: 900px;
+  margin: 0 auto;
   padding: 20px;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #287684;
 }
 
 .input-group {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   display: flex;
   gap: 10px;
+  justify-content: center;
 }
 
 .input-group input {
-  padding: 5px;
+  padding: 8px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  width: 200px;
 }
 
 .button {
-  padding: 6px 12px;
-  background-color: #f9ffd5;
-  color: rgb(3, 0, 0);
+  padding: 10px 20px;
+  background-color: #feed8b; /* Bright yellow for button */
+  color: #3b3b3b;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #4b4f54;
+  background-color: #287684; /* Deep teal for hover */
+  color: #fff;
 }
 
 .palette {
   display: flex;
   gap: 10px;
   margin: 20px 0;
+  justify-content: center;
 }
 
 .palette-square {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
   border: 1px solid #ddd;
 }
 
@@ -58,9 +71,10 @@ body {
 }
 
 .history li {
-  background: #287684;
-  padding: 5px 10px;
+  background: #f4f9f9; /* Light teal for history entries */
+  padding: 10px;
   margin: 5px 0;
   border: 1px solid #ddd;
   border-radius: 4px;
+  color: #3b3b3b;
 }
