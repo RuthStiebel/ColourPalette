@@ -71,8 +71,8 @@ const App: React.FC = () => { //function App()
       {/* Display Section */}
       {palette && (
         <div>
-          {/* Display the palette name */}
-          <h2>Palette: {palette.paletteName}</h2>
+          {/* Display the palette id */}
+          <h2>Palette: {palette.paletteId}</h2>
 
           {/* Display the palette colors as colored squares */}
           <div style={{ display: "flex", gap: "10px" }}>
