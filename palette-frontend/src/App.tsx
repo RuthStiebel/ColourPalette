@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import { Palette } from '../../palette-backend/src/models/paletteModels';
 
-const App: React.FC = () => { //function App() 
+const App: React.FC = () => { 
   // State to manage user input for keywords (comma-separated values)
-  const [keywords, setKeywords] = useState("");
+  const [keywords, setKeywords] = useState<string>("");
 
   // State to manage user input for the number of colors to generate (default: 5)
-  const [numColors, setNumColors] = useState(3);
+  const [numColors, setNumColors] = useState<number>(5);
 
   // State to store the generated palette object retrieved from the API
-  const [palette, setPalette] = useState<any>(null);
+  const [palette, setPalette] = useState<Palette | null>(null); // Type the palette state
 
   const generatePalette = async () => {
     const requestData = {
@@ -32,7 +33,7 @@ const App: React.FC = () => { //function App()
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data : Palette = await response.json();
       console.log("Response Data:", data); // Log the data received from the backend
       setPalette(data);
     } catch (error) {
