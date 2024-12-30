@@ -77,6 +77,7 @@ const App: React.FC = () => {
 
           {/* Display the palette colors as colored squares */}
           <div style={{ display: "flex", gap: "10px" }}>
+            {/* Map over the colors array and display a colored square for each color */}
             {palette.colors.map((color: any, index: number) => (
               <div
                 key={index}
