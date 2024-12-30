@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -7,16 +6,15 @@
 
 body {
   font-family: "Arial", sans-serif;
-  background-color: #fdf6f0; /* Soft pastel cream */
-  color: #555; /* Subtle text color */
+  background-color: #f0f0f0; /* Slightly lighter cream for more contrast */
+  color: #333; /* Darker text for better readability */
   line-height: 1.6;
-  padding: 0;
-  margin: 0;
+  padding: 20px; /* Added some padding around the body */
 }
 
 h1, h2, h3 {
-  color: #5a7d9a; /* Pastel blue */
-  margin-bottom: 10px;
+  color: #336699; /* Deeper blue for headings */
+  margin-bottom: 15px; /* Increased margin */
 }
 
 ul {
@@ -26,60 +24,70 @@ ul {
 
 a {
   text-decoration: none;
-  color: inherit;
+  color: #007bff; /* Standard blue link color */
+}
+
+a:hover {
+  text-decoration: underline; /* Underline on hover for better UX */
 }
 
 input {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ddd;
+  padding: 10px; /* Slightly larger padding */
+  font-size: 16px; /* Slightly larger font size */
+  border: 1px solid #ccc; /* Slightly darker border */
   border-radius: 5px;
-  background-color: #f6f0f6; /* Soft pastel lavender */
-  color: #555;
+  background-color: #fff; /* White background for input */
+  color: #333;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); /* Subtle inset shadow */
 }
 
 input:focus {
   outline: none;
-  border-color: #a6c9d3; /* Light pastel blue */
+  border-color: #007bff; /* Blue focus border */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* Subtle outer shadow on focus */
 }
 
 button {
-  padding: 8px 15px;
-  background-color: #c1baff; /* Soft pastel purple */
-  color: #555;
+  padding: 10px 20px; /* Slightly larger padding */
+  background-color: #002c5c; 
+  color: #fff; /* White text on button */
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
 }
 
 button:hover {
-  background-color: #9185fc; /* Slightly darker pastel purple */
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .palette {
   display: flex;
-  gap: 15px;
-  margin: 20px 0;
+  gap: 20px; /* Increased gap */
+  margin: 30px 0; /* Increased margin */
 }
 
 .palette-square {
-  width: 50px;
-  height: 50px;
+  width: 60px; /* Slightly larger squares */
+  height: 60px;
   border-radius: 5px;
-  border: 1px solid #ddd;
+  border: 1px solid #bbb; /* Slightly darker border */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
 .history {
-  background: #e8f1f6; /* Soft pastel blue */
-  padding: 10px;
+  background: #fff; /* White background for history */
+  padding: 15px; /* Increased padding */
   border-radius: 5px;
-  margin-top: 20px;
+  margin-top: 30px; /* Increased margin */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
 .history li {
-  margin-bottom: 5px;
-  padding: 5px;
+  margin-bottom: 8px; /* Increased margin */
+  padding: 8px; /* Increased padding */
   border-radius: 5px;
-  background: #dfe7f3; /* Lighter pastel blue */
+  background: #f8f9fa; /* Very light gray background */
+  border: 1px solid #eee;
 }
