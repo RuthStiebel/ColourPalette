@@ -18,7 +18,7 @@ const App: React.FC = () => {
       userId: "testUser123",
     };
 
-    console.log("Request Data:", requestData); // Log the data being sent
+    console.log("Request Data:", requestData); // DEBUG Log the data being sent
 
     try {
       const response = await fetch("http://localhost:5000/api/palettes/generate", {
@@ -34,7 +34,7 @@ const App: React.FC = () => {
       }
 
       const data : Palette = await response.json();
-      console.log("Response Data:", data); // Log the data received from the backend
+      console.log("Response Data:", data); // DEBUG Log the data received from the backend
       setPalette(data);
     } catch (error) {
       console.error("Error generating palette:", error);
@@ -74,9 +74,9 @@ const App: React.FC = () => {
         <div>
           {/* Display the palette id */}
           <h2>Palette: {palette.paletteId}</h2>
-
+    
           {/* Display the palette colors as colored squares */}
-          <div style={{ display: "flex", gap: "10px" }}>
+          <div className="palette">
             {/* Map over the colors array and display a colored square for each color */}
             {palette.colors.map((color: any, index: number) => (
               <div
@@ -84,7 +84,7 @@ const App: React.FC = () => {
                 style={{
                   width: "50px",
                   height: "50px",
-                  backgroundColor: `rgb(${color.rgb.join(",")})`, // Convert RGB array to CSS rgb format
+                  backgroundColor: `rgb(${color.rgb.join(",")})`,
                 }}
               ></div>
             ))}

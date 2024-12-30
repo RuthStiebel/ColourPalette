@@ -1,3 +1,4 @@
+
 * {
   margin: 0;
   padding: 0;
@@ -6,23 +7,79 @@
 
 body {
   font-family: "Arial", sans-serif;
-  background-color: #ffffff; /* White background for a clean look */
-  color: #3b3b3b; /* Neutral dark gray for text */
+  background-color: #fdf6f0; /* Soft pastel cream */
+  color: #555; /* Subtle text color */
   line-height: 1.6;
   padding: 0;
   margin: 0;
 }
 
 h1, h2, h3 {
+  color: #5a7d9a; /* Pastel blue */
   margin-bottom: 10px;
-  color: #287684; /* Deep teal for headings */
 }
 
 ul {
   list-style-type: none;
+  padding: 0;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f6f0f6; /* Soft pastel lavender */
+  color: #555;
+}
+
+input:focus {
+  outline: none;
+  border-color: #a6c9d3; /* Light pastel blue */
+}
+
+button {
+  padding: 8px 15px;
+  background-color: #ffd6ba; /* Soft pastel peach */
+  color: #555;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #ffc4b3; /* Slightly darker pastel peach */
+}
+
+.palette {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.palette-square {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.history {
+  background: #e8f1f6; /* Soft pastel blue */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.history li {
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  background: #dfe7f3; /* Lighter pastel blue */
 }
