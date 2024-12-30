@@ -52,16 +52,21 @@ app.post('/api/palettes/generate', (req: Request, res: Response) => {
         generatedColors.push({ hex: hexColor, rgb: rgb });
       }
     }
-    
+    console.log("Generated Colors:", generatedColors);//DEBUG
+
     // Clean keywords 
     const cleanKeywords = keywords.replace(/[^a-zA-Z0-9 ,-]/g, ""); // Remove special characters
-    
+
+    console.log("Clean Keywords:", cleanKeywords); //DEBUG
+
     const palette: Palette = {
         paletteId: `palette-${cleanKeywords}`, 
         createdAt: new Date(),
         colors: generatedColors,
         history: [], // Add history if needed
     };
+    
+    console.log("Generated Palette:", palette); //DEBUG
 
     // Respond with the generated palette
     res.status(201).json({ palette });
