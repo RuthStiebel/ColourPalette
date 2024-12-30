@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors"; 
 import connectDB from "./config/db"; 
 import paletteRoutes from "./routes/paletteRoutes";
+import { Palette, Color} from "./models/paletteModels";
 
 // Load environment variables from a .env file into process.env
 dotenv.config();
@@ -27,21 +28,40 @@ app.use(express.json());
 app.use("/api", paletteRoutes);
 
 app.post('/api/palettes/generate', (req: Request, res: Response) => {
-  const { numColors } = req.body;
+  const { numColors, keywords } = req.body;
 
   try {
     // Validate numColors
     if (!numColors || isNaN(numColors) || numColors <= 0) {
       throw new Error("Invalid number of colors.");
     }
+    
+    // Validate keywords 
+    if (!keywords || typeof keywords !== "string") {
+      throw new Error("Invalid keywords format. Please provide a comma-separated string.");
+    }
 
     // Generate a color palette logic
-    const palette = [];
+    const generatedColors: Color[] = []; // Array of Color objects
     for (let i = 0; i < numColors; i++) {
-      // Generate random colors
-      const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-      palette.push(randomColor);
+      const hexColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+      // Convert hex to RGB (helper function)
+      const rgb = hexToRgb(hexColor);
+      if (rgb) {
+        generatedColors.push({ hex: hexColor, rgb: rgb });
+      }
     }
+    
+    // Clean keywords 
+    const cleanKeywords = keywords.replace(/[^a-zA-Z0-9 ,-]/g, ""); // Remove special characters
+    
+    const palette: Palette = {
+        paletteId: `palette-${cleanKeywords}`, 
+        createdAt: new Date(),
+        colors: generatedColors,
+        history: [], // Add history if needed
+    };
 
     // Respond with the generated palette
     res.status(201).json({ palette });
@@ -60,3 +80,15 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// Helper function to convert hex to RGB
+function hexToRgb(hex: string): [number, number, number] | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16),
+      ]
+    : null;
+}
