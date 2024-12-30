@@ -36,9 +36,17 @@ app.post('/api/palettes/generate', (req: Request, res: Response) => {
       throw new Error("Invalid number of colors.");
     }
     
-    // Validate keywords 
-    if (typeof keywords !== "string") {
-      throw new Error("Invalid keywords format. Please provide a comma-separated string.");
+    // Validate keywords (allowing empty keywords)
+    let cleanKeywords: string[] | null = null; // Initialize as null
+    if (keywords) { // Check if keywords exist
+      if (typeof keywords !== "string") {
+        throw new Error("Invalid keywords format. Keywords must be a string.");
+      }
+
+      cleanKeywords = keywords.trim().split(",").map(keyword => keyword.trim()); // Trim individual keywords
+      if (cleanKeywords.some(keyword => keyword === "")) {
+        throw new Error("Keywords cannot contain only whitespace.")
+        }
     }
 
     // Generate a color palette logic
@@ -54,15 +62,8 @@ app.post('/api/palettes/generate', (req: Request, res: Response) => {
     }
     console.log("Generated Colors:", generatedColors);//DEBUG
 
-    // Clean keywords 
-    var cleanKeywords = null;
-    if (keywords) {
-        cleanKeywords = keywords.replace(/[^a-zA-Z0-9 ,-]/g, ""); // Remove special characters
-        console.log("Clean Keywords:", cleanKeywords); //DEBUG
-    }
-    
     const palette: Palette = {
-        paletteId: `palette-${cleanKeywords}-${numColors}`, 
+        paletteId: `palette-${cleanKeywords ? cleanKeywords.join('-') : 'no-keywords'}-${numColors}`, // Handle null cleanKeywords        
         createdAt: new Date(),
         colors: generatedColors,
         history: [], // Add history if needed
