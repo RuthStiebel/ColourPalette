@@ -37,7 +37,7 @@ app.post('/api/palettes/generate', (req: Request, res: Response) => {
     }
     
     // Validate keywords 
-    if (!keywords || typeof keywords !== "string") {
+    if (typeof keywords !== "string") {
       throw new Error("Invalid keywords format. Please provide a comma-separated string.");
     }
 
@@ -55,12 +55,14 @@ app.post('/api/palettes/generate', (req: Request, res: Response) => {
     console.log("Generated Colors:", generatedColors);//DEBUG
 
     // Clean keywords 
-    const cleanKeywords = keywords.replace(/[^a-zA-Z0-9 ,-]/g, ""); // Remove special characters
-
-    console.log("Clean Keywords:", cleanKeywords); //DEBUG
-
+    var cleanKeywords = null;
+    if (keywords) {
+        cleanKeywords = keywords.replace(/[^a-zA-Z0-9 ,-]/g, ""); // Remove special characters
+        console.log("Clean Keywords:", cleanKeywords); //DEBUG
+    }
+    
     const palette: Palette = {
-        paletteId: `palette-${cleanKeywords}`, 
+        paletteId: `palette-${cleanKeywords}-${numColors}`, 
         createdAt: new Date(),
         colors: generatedColors,
         history: [], // Add history if needed
