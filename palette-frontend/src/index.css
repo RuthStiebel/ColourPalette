@@ -45,7 +45,7 @@ input:focus {
 
 button {
   padding: 8px 15px;
-  background-color: #ffd6ba; /* Soft pastel peach */
+  background-color: #c1baff; /* Soft pastel purple */
   color: #555;
   border: none;
   border-radius: 5px;
@@ -54,7 +54,7 @@ button {
 }
 
 button:hover {
-  background-color: #ffc4b3; /* Slightly darker pastel peach */
+  background-color: #9185fc; /* Slightly darker pastel purple */
 }
 
 .palette {
