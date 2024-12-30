@@ -4,9 +4,14 @@ import cors from "cors";
 import connectDB from "./config/db"; 
 import paletteRoutes from "./routes/paletteRoutes";
 import { Palette, Color} from "./models/paletteModels";
+import OpenAI from 'openai';
 
 // Load environment variables from a .env file into process.env
 dotenv.config();
+
+const client = new OpenAI({
+  apiKey: process.env['OPENAI_API_KEY'], 
+});
 
 // Connect to the database
 connectDB().catch((error) => {

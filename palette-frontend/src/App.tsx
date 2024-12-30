@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
   const generatePalette = async () => {
     const requestData = {
-      keywords: keywords ? keywords.split(",") : null,
+      keywords: keywords,
       numColors,
       userId: "testUser123",
     };
@@ -28,16 +28,18 @@ const App: React.FC = () => {
         },
         body: JSON.stringify(requestData),
       });
-
+      
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json(); // Try to parse error message from server
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
       }
-
+      
       const data : Palette = await response.json();
       console.log("Response Data:", data); // DEBUG Log the data received from the backend
-      setPalette(data);
-    } catch (error) {
-      console.error("Error generating palette:", error);
+      setPalette(data.palette);
+
+    } catch (err : any) {
+      console.error("Error generating palette:", err);
     }
   };
   
@@ -70,6 +72,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Display Section */}
+      {console.log("Palette for render:", palette)} {/* DEBUG Log the palette state */}
       {palette && (
         <div>
           {/* Display the palette id */}
@@ -78,6 +81,7 @@ const App: React.FC = () => {
           {/* Display the palette colors as colored squares */}
           <div className="palette">
             {/* Map over the colors array and display a colored square for each color */}
+            {console.log("Palette colors:", palette.colors)} {/* DEBUG Log the palette state */}
             {palette.colors.map((color: any, index: number) => (
               <div
                 key={index}
