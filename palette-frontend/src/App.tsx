@@ -72,7 +72,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Display Section */}
-      {console.log("Palette for render:", palette)} {/* DEBUG Log the palette state */}
+      {/* DEBUG Log the palette state */}
       {palette && (
         <div>
           {/* Display the palette id */}
@@ -81,7 +81,6 @@ const App: React.FC = () => {
           {/* Display the palette colors as colored squares */}
           <div className="palette">
             {/* Map over the colors array and display a colored square for each color */}
-            {console.log("Palette colors:", palette.colors)} {/* DEBUG Log the palette state */}
             {palette.colors.map((color: any, index: number) => (
               <div
                 key={index}
