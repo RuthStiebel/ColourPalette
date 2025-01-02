@@ -57,7 +57,7 @@ app.post('/api/palettes/generate', async (req: Request, res: Response) => {
     }
 
     // Generate a prompt for OpenAI
-    const prompt = `Generate a color palette with ${numColors} colors. Keywords: ${
+    const prompt = `Generate a harmonious color palette with ${numColors} colors. Keywords: ${
       cleanKeywords ? cleanKeywords.join(", ") : "none"
     }. Provide colors in hex format.`;
 
