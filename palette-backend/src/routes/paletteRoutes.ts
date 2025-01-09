@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", (req: Request, res: Response) => {
   res.send("Palette API is running...");
 });
-/*
+
 // Get all palettes
 router.get("/palettes", async (req: Request, res: Response) => {
   try {
@@ -29,7 +29,7 @@ router.post("/palettes", async (req: Request, res: Response) => {
     res.status(400).json({ message: (error as Error).message });
   }
 });
-*/
+
 
 // Generate a palette
 router.post("/generate", async (req: Request, res: Response) => {
