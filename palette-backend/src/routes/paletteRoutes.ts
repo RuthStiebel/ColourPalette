@@ -44,8 +44,6 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
       else {
         generatedColors = await callOpenAI(cleanKeywords, numColors);
       }
-      console.log("Generated colors:\n" + JSON.stringify(generatedColors, null, 2)); //DEBUG
-      console.log("History:\n" + JSON.stringify(req.body.history, null, 2)); //DEBUG
 
       // Create a new palette
       const palette = new Palette({
@@ -62,6 +60,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
   
       res.status(201).json({
         paletteId: palette.paletteId,
+        userId: palette.userId,
         colors: palette.colors,
         history: palette.history,
       });
