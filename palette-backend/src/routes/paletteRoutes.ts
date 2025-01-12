@@ -14,34 +14,24 @@ const router = express.Router();
 router.get("/", (req: Request, res: Response) => {
   res.send("Palette API is running...");
 });
-/*
-// Get all palettes
-router.get("/palettes", async (req: Request, res: Response) => {
+
+// Get all palettes for a specific userId
+router.get("/palettes/:userId", async (req: Request, res: Response) => { // Route now takes userId as a parameter
   try {
-    const palettes = await Palette.find();
-    res.json(palettes);
+      const userId = req.params.userId; // Extract userId from request parameters
+      const palettes = await Palette.find({ userId }); // Query for palettes with matching userId
+      res.json(palettes);
   } catch (error) {
-    res.status(500).json({ message: (error as Error).message });
+      res.status(500).json({ message: (error as Error).message });
   }
 });
 
-// Add a new palette
-router.post("/palettes", async (req: Request, res: Response) => {
-  try {
-    const newPalette = new Palette(req.body);
-    const savedPalette = await newPalette.save();
-    res.status(201).json(savedPalette);
-  } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
-  }
-});
-*/
 // Generate a palette
 router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     
     try {
-      const { keywords, numColors } = req.body;
+      const { keywords, numColors, userId } = req.body;
             
       // Validate inputs
       validateNumColors(numColors);
@@ -55,13 +45,15 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         generatedColors = await callOpenAI(cleanKeywords, numColors);
       }
       console.log("Generated colors:\n" + JSON.stringify(generatedColors, null, 2)); //DEBUG
+      console.log("History:\n" + JSON.stringify(req.body.history, null, 2)); //DEBUG
 
       // Create a new palette
       const palette = new Palette({
         paletteId:  uuidv4(),
+        userId: userId,
         colors : generatedColors,
-        history: [
-          `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", "):"no keywords"}.`,
+        history: [...(req.body.history || []), // Correct way to add to history
+        `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", ") : "no keywords"}.`
         ],
       });
       
