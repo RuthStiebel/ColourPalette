@@ -53,7 +53,7 @@ export function parseHexColors(content: string, numColors: number): Color[] {
   if (!hexColors || hexColors.length < numColors) {
     throw new Error("Failed to generate enough colors from OpenAI response.");
   }
-
+  console.log("Hex colours\n" + hexColors); //DEBUG
   return hexColors.slice(0, numColors).map((hex) => ({
     hex,
     rgb: hexToRgb(hex) as [number, number, number],
@@ -77,23 +77,19 @@ export async function callOpenAI(cleanKeywords: string[], numColors: number): Pr
       max_tokens: 100,
     });
 
+
+    console.log("API response" + response); //DEBUG
     const content = response.choices[0]?.message?.content;
 
+    console.log("AI content" + content); //DEBUG
+    
     if (!content) {
       throw new Error("OpenAI API did not return a valid response.");
     }
-
-    // Extract hex color codes from the response
-    const hexColors = content.match(/#[a-fA-F0-9]{6}/g);
-    if (!hexColors || hexColors.length < numColors) {
-      throw new Error("Failed to generate enough colors from OpenAI response.");
-    }
-
-    // Map hex colors to Color objects
-    const generatedColors: Color[] = hexColors.slice(0, numColors).map((hex) => ({
-        hex,
-        rgb: hexToRgb(hex) as [number, number, number],
-}));
+    
+    // Extract color codes from response
+    const generatedColors = parseHexColors(content, numColors)
+    console.log("Generated colors" + generatedColors); //DEBUG
 
     return generatedColors;
   } catch (error) {

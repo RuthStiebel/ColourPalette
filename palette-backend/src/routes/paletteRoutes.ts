@@ -62,7 +62,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         paletteId,
         colors,
         history: [
-          `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", "):""}.`,
+          `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", "):"no keywords"}.`,
         ],
       });
   
