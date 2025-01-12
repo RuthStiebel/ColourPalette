@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Palette } from '../../palette-backend/src/models/paletteModels';
 
 const App: React.FC = () => { 
@@ -10,12 +10,35 @@ const App: React.FC = () => {
 
   // State to store the generated palette object retrieved from the API
   const [palette, setPalette] = useState<Palette | null>(null); // Type the palette state
+  const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
+  const [userHistory, setUserHistory] = useState<string[]>([]); // Add userHistory state and setter
+  const userId = "testUser123";
+  
+  const fetchUserPalettes = async () => {
+    try {
+      const response = await fetch(`/api/palettes/${userId}`); // Dynamic user ID
+      if (!response.ok) {
+        throw new Error("Failed to fetch user palettes");
+      }
+      const data: Palette[] = await response.json();
+      // Extract history entries from all palettes and combine them
+      const userHistory = data.flatMap((palette) => palette.history);
+      setUserHistory(userHistory); // Update userHistory state
+    } catch (error) {
+      console.error("Error fetching user palettes:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserPalettes(); // Call on component mount
+  }, []);
 
   const generatePalette = async () => {
     const requestData = {
       keywords: keywords,
       numColors,
       userId: "testUser123",
+      previousHistory: userHistory,
     };
 
     console.log("Request Data:", requestData); // DEBUG Log the data being sent
@@ -37,6 +60,7 @@ const App: React.FC = () => {
       const data : Palette = await response.json();
       console.log("Response Data:", data); // DEBUG Log the data received from the backend
       setPalette(data);
+      fetchUserPalettes(); // Refresh the list after generating a new palette
 
     } catch (err : any) {
       console.error("Error generating palette:", err);

@@ -41,7 +41,6 @@ export function generateColors(num: number): { rgb: [number, number, number]; he
       i--; // Decrement i to retry this color generation
     }
   }
-  console.log("Generated colors:\n" + JSON.stringify(colors, null, 2)); //DEBUG
   return colors;
 }
 
@@ -62,7 +61,6 @@ export function parseHexColors(content: string, numColors: number): Color[] {
   if (!hexColors || hexColors.length < numColors) {
     throw new Error("Failed to generate enough colors from OpenAI response.");
   }
-  console.log("Hex colours\n" + hexColors); //DEBUG
   return hexColors.slice(0, numColors).map((hex) => ({
     hex,
     rgb: hexToRgb(hex) as [number, number, number],
