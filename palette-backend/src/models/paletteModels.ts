@@ -12,6 +12,7 @@ export interface Palette {
 }
 
 const ColorSchema = new Schema<Color>({
+  hex: { type: String, required: true }, 
   rgb: { type: [Number], required: true },
 });
 
