@@ -1,6 +1,12 @@
 import express, { Request, Response } from "express";
 import Palette from "../models/paletteModels";
 import { v4 as uuidv4 } from "uuid";
+import {
+  validateNumColors,
+  validateAndCleanKeywords,
+  generateColors,
+  callOpenAI,
+} from "../utils/colorUtils";
 
 const router = express.Router();
 
@@ -30,21 +36,33 @@ router.post("/palettes", async (req: Request, res: Response) => {
   }
 });
 
-
 // Generate a palette
-router.post("/generate", async (req: Request, res: Response) => {
+router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
-    const { keywords, numColors, userId } = req.body;
-
+    
     try {
+      const { keywords, numColors } = req.body;
+      
       const paletteId = uuidv4();
-      const colors = generateColors(numColors);
-  
+      
+      // Validate inputs
+      validateNumColors(numColors);
+      const cleanKeywords = validateAndCleanKeywords(keywords);
+      
+      let colors;
+      if (cleanKeywords == null) {
+        colors = await generateColors(numColors);
+      }
+      else {
+        colors = await callOpenAI(cleanKeywords, numColors);
+      }
+
+      // Create a new palette
       const palette = new Palette({
         paletteId,
         colors,
         history: [
-          `Generated palette with ${keywords ? "keywords: " + keywords.join(", "):""}.`,
+          `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", "):""}.`,
         ],
       });
   
@@ -59,21 +77,5 @@ router.post("/generate", async (req: Request, res: Response) => {
       res.status(500).json({ message: (error as Error).message });
     }
   });
- 
-  // Function to generate colors
-  function generateColors(num: number): { rgb: [number, number, number] }[] {
-    const colors: { rgb: [number, number, number] }[] = [];
-      for (let i = 0; i < num; i++) {
-      colors.push({
-        rgb: [
-          Math.floor(Math.random() * 256),
-          Math.floor(Math.random() * 256),
-          Math.floor(Math.random() * 256),
-        ],
-      });
-    }
-    
-    return colors;
-  }
-  
+   
   export default router;
