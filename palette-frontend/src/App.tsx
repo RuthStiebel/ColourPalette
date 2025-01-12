@@ -36,7 +36,7 @@ const App: React.FC = () => {
       
       const data : Palette = await response.json();
       console.log("Response Data:", data); // DEBUG Log the data received from the backend
-      setPalette(data.palette);
+      setPalette(data);
 
     } catch (err : any) {
       console.error("Error generating palette:", err);

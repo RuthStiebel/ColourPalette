@@ -66,7 +66,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
       });
       
       console.log("Generated palette:\n" + JSON.stringify(palette, null, 2)); //DEBUG
-      await palette.save();
+      await palette.save(); // Save the palette to the database
   
       res.status(201).json({
         paletteId: palette.paletteId,
