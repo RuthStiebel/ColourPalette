@@ -14,7 +14,7 @@ const router = express.Router();
 router.get("/", (req: Request, res: Response) => {
   res.send("Palette API is running...");
 });
-
+/*
 // Get all palettes
 router.get("/palettes", async (req: Request, res: Response) => {
   try {
@@ -35,37 +35,37 @@ router.post("/palettes", async (req: Request, res: Response) => {
     res.status(400).json({ message: (error as Error).message });
   }
 });
-
+*/
 // Generate a palette
 router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     
     try {
       const { keywords, numColors } = req.body;
-      
-      const paletteId = uuidv4();
-      
+            
       // Validate inputs
       validateNumColors(numColors);
       const cleanKeywords = validateAndCleanKeywords(keywords);
       
-      let colors;
+      let generatedColors;
       if (cleanKeywords == null) {
-        colors = await generateColors(numColors);
+        generatedColors = await generateColors(numColors);
       }
       else {
-        colors = await callOpenAI(cleanKeywords, numColors);
+        generatedColors = await callOpenAI(cleanKeywords, numColors);
       }
+      console.log("Generated colors:\n" + JSON.stringify(generatedColors, null, 2)); //DEBUG
 
       // Create a new palette
       const palette = new Palette({
-        paletteId,
-        colors,
+        paletteId:  uuidv4(),
+        colors : generatedColors,
         history: [
           `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", "):"no keywords"}.`,
         ],
       });
-  
+      
+      console.log("Generated palette:\n" + JSON.stringify(palette, null, 2)); //DEBUG
       await palette.save();
   
       res.status(201).json({

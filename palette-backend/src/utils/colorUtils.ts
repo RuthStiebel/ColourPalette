@@ -22,17 +22,26 @@ export function validateAndCleanKeywords(keywords: any): string[] | null {
   return cleanKeywords;
 }
 
-export function generateColors(num: number): { rgb: [number, number, number] }[] {
-  const colors: { rgb: [number, number, number] }[] = [];
+export function generateColors(num: number): { rgb: [number, number, number]; hex: string }[] {
+  const colors: { rgb: [number, number, number]; hex: string }[] = [];
   for (let i = 0; i < num; i++) {
-    colors.push({
-      rgb: [
-        Math.floor(Math.random() * 256),
-        Math.floor(Math.random() * 256),
-        Math.floor(Math.random() * 256),
-      ],
-    });
+    // Generate a random hex color
+    let hex = "#";
+    for (let j = 0; j < 6; j++) {
+      hex += Math.floor(Math.random() * 16).toString(16);
+    }
+    console.log("\nHex colour" + hex); //DEBUG
+    const rgb = hexToRgb(hex); 
+
+    if (rgb) { // Check if rgb conversion was successful
+      colors.push({ hex, rgb });
+    } else {
+      // Handle the case where the hex code is invalid
+      console.error("Generated invalid hex code:", hex);
+      i--; // Decrement i to retry this color generation
+    }
   }
+  console.log("Generated colors:\n" + JSON.stringify(colors, null, 2)); //DEBUG
   return colors;
 }
 
@@ -89,7 +98,6 @@ export async function callOpenAI(cleanKeywords: string[], numColors: number): Pr
     
     // Extract color codes from response
     const generatedColors = parseHexColors(content, numColors)
-    console.log("Generated colors" + generatedColors); //DEBUG
 
     return generatedColors;
   } catch (error) {
