@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import Palette from "../models/paletteModels";
-import { v4 as uuidv4 } from "uuid";
 import {
   validateNumColors,
   validateAndCleanKeywords,
@@ -58,7 +57,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         cleanKeywords ? "keywords: " + cleanKeywords.join(", ") : "no keywords"
       }.`;
       const palette = new Palette({
-        paletteId:  uuidv4(),
+        paletteId:  historyEntry + " " + new Date().toISOString(),
         userId: userId,
         colors : generatedColors,
         history: [...previousHistory, historyEntry],
