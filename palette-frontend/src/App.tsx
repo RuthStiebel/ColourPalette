@@ -7,12 +7,13 @@ const App: React.FC = () => {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userHistory, setUserHistory] = useState<string[]>([]);
-  const userId = "testUser123";
+  const userId = "testUser122";
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const fetchUserPalettes = async () => {
     try {
-      const response = await fetch(`/api/palettes/${userId}`);
+      console.log("Fetching user palettes for userId:", userId); //DEBUG
+      const response = await fetch("http://localhost:5000/api/palettes/testUser122");
       if (!response.ok) {
         throw new Error("Failed to fetch user palettes");
       }
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     const requestData = {
       keywords: keywords,
       numColors,
-      userId: "testUser123",
+      userId: userId,
       previousHistory: userHistory,
     };
 
@@ -59,16 +60,10 @@ const App: React.FC = () => {
     }
   };
 
-  const scrollToPalette = (paletteId: string) => {
-    if (paletteRefs.current[paletteId]) {
-      paletteRefs.current[paletteId]?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <div style={{ display: "flex", padding: "20px" }}>
       {/* Sidebar for user history */}
-      <div style={{ width: "25%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
+      <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
         <h2>User History</h2> 
         <ul style={{ listStyle: "none", padding: 0 }}>
           {userPalettes.map((palette) => (
@@ -79,7 +74,7 @@ const App: React.FC = () => {
                   <div
                     key={index}
                     style={{
-                      width: "20px",
+                      width: "70px",
                       height: "20px",
                       backgroundColor: `rgb(${color.rgb.join(",")})`,
                       marginRight: "5px",
@@ -88,8 +83,7 @@ const App: React.FC = () => {
                 ))}
               </div>
               <button
-                style={{ marginTop: "5px" }}
-                onClick={() => scrollToPalette(palette.paletteId)}
+                style={{ marginTop: "10px" }}
               >
                 View Palette
               </button>
@@ -154,19 +148,6 @@ const App: React.FC = () => {
             ref={(el) => (paletteRefs.current[userPalette.paletteId] = el)}
             style={{ marginTop: "20px" }}
           >
-            <h2>Palette: {userPalette.paletteId}</h2>
-            <div style={{ display: "flex" }}>
-              {userPalette.colors.map((color, index) => (
-                <div
-                  key={index}
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    backgroundColor: `rgb(${color.rgb.join(",")})`,
-                  }}
-                ></div>
-              ))}
-            </div>
           </div>
         ))}
       </div>
