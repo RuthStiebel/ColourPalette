@@ -69,7 +69,7 @@ const App: React.FC = () => {
     <div style={{ display: "flex", padding: "20px" }}>
       {/* Sidebar for user history */}
       <div style={{ width: "25%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
-        <h2>User History</h2>
+        <h2>User History</h2> 
         <ul style={{ listStyle: "none", padding: 0 }}>
           {userPalettes.map((palette) => (
             <li key={palette.paletteId} style={{ marginBottom: "10px" }}>
@@ -137,7 +137,7 @@ const App: React.FC = () => {
                 ></div>
               ))}
             </div>
-            <h3>History:</h3>
+            <h3>Session History:</h3>
             <ul>
               {palette.history.map((entry, index) => (
                 <li key={index}>{entry}</li>
