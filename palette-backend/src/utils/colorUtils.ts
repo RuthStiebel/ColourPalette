@@ -1,12 +1,14 @@
 import { Color } from "../models/paletteModels";
-import getOpenAIClient from "../config/openai"; // Import the config function
+import getOpenAIClient from "../config/openai"; // Import the OpenAI client configuration
 
+// Validate the number of colors
 export function validateNumColors(numColors: any): void {
   if (!numColors || isNaN(numColors) || numColors <= 0) {
     throw new Error("Invalid number of colors.");
   }
 }
 
+// Validate and clean keyword input
 export function validateAndCleanKeywords(keywords: any): string[] | null {
   if (!keywords) return null;
 
@@ -22,6 +24,7 @@ export function validateAndCleanKeywords(keywords: any): string[] | null {
   return cleanKeywords;
 }
 
+// Generate random colors if no keywords are provided
 export function generateColors(num: number): { rgb: [number, number, number]; hex: string }[] {
   const colors: { rgb: [number, number, number]; hex: string }[] = [];
   for (let i = 0; i < num; i++) {
@@ -44,6 +47,7 @@ export function generateColors(num: number): { rgb: [number, number, number]; he
   return colors;
 }
 
+// Convert hex to RGB
 export function hexToRgb(hex: string): [number, number, number] | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
@@ -55,6 +59,7 @@ export function hexToRgb(hex: string): [number, number, number] | null {
     : null;
 }
 
+// Parse hex colors from OpenAI response
 export function parseHexColors(content: string, numColors: number): Color[] {
   const hexColors = content.match(/#[a-fA-F0-9]{6}/g);
 
@@ -66,10 +71,9 @@ export function parseHexColors(content: string, numColors: number): Color[] {
     rgb: hexToRgb(hex) as [number, number, number],
   }));
 }
-
+// Call OpenAI to generate colors based on keywords
 export async function callOpenAI(cleanKeywords: string[], numColors: number): Promise<{ hex: string }[]> {
   try {
-    
     const client = await getOpenAIClient(); // Get the OpenAI client instance
 
      // Generate a prompt for OpenAI
