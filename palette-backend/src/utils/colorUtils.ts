@@ -76,9 +76,15 @@ export async function callOpenAI(cleanKeywords: string[], numColors: number): Pr
     const client = await getOpenAIClient(); // Get the OpenAI client instance
 
      // Generate a prompt for OpenAI
-    const prompt = `Generate a harmonious color palette with ${numColors} colors. Keywords: ${
-      cleanKeywords ? cleanKeywords.join(", ") : "none"
-    }. Provide colors in hex format.`;
+    const prompt = `Generate a harmonious color palette with ${numColors} colors. 
+    Keywords: ${cleanKeywords ? cleanKeywords.join(", ") : "none"}. 
+    Use principles of color theory to ensure the palette is cohesive 
+    (e.g., complementary, analogous, triadic, or monochromatic schemes). 
+    Provide the colors in hex format along with descriptive names. 
+    For example, you could use the following keywords: "ocean, sky, forest" to generate a nature-inspired palette. 
+    The colors should be visually appealing and suitable for use in a web design project.`;
+
+    
 
     // Fetch response from OpenAI API
     console.log("Prompt" + prompt); //DEBUG
