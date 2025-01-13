@@ -61,7 +61,8 @@ const App: React.FC = () => {
       <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
         <h2>User History</h2> 
         <ul style={{ listStyle: "none", padding: 0 }}>
-          {userPalettes.map((palette) => (
+          {/* Reverse the userPalettes array before mapping */}
+          {userPalettes.slice().reverse().map((palette) => (
             <li key={palette.paletteId} style={{ marginBottom: "10px" }}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 {/* Display color blocks */}
@@ -77,9 +78,7 @@ const App: React.FC = () => {
                   ></div>
                 ))}
               </div>
-              <button
-                style={{ marginTop: "10px" }}
-              >
+              <button style={{ marginTop: "10px" }}>
                 View Palette
               </button>
             </li>
