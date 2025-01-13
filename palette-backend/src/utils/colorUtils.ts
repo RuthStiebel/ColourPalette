@@ -33,7 +33,6 @@ export function generateColors(num: number): { rgb: [number, number, number]; he
     for (let j = 0; j < 6; j++) {
       hex += Math.floor(Math.random() * 16).toString(16);
     }
-    console.log("\nHex colour" + hex); //DEBUG
     const rgb = hexToRgb(hex); 
 
     if (rgb) { // Check if rgb conversion was successful
