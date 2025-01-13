@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Palette } from '../../palette-backend/src/models/paletteModels';
 
 const App: React.FC = () => {
@@ -7,29 +7,24 @@ const App: React.FC = () => {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userHistory, setUserHistory] = useState<string[]>([]);
-  const userId = "testUser122";
+  const userId = "testUser121";
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const fetchUserPalettes = async () => {
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
-      const response = await fetch("http://localhost:5000/api/palettes/testUser122");
+      const response = await fetch(`http://localhost:5000/api/palettes/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch user palettes");
       }
       const data: Palette[] = await response.json();
+      console.log("Fetched:", data); //DEBUG
       setUserPalettes(data);
-      const userHistory = data.flatMap((palette) => palette.history);
-      setUserHistory(userHistory);
     } catch (error) {
       console.error("Error fetching user palettes:", error);
     }
-  };
-
-  useEffect(() => {
-    fetchUserPalettes();
-  }, []);
-
+  }; /*saves user palettes but not session DEBUG*/
+  
   const generatePalette = async () => {
     const requestData = {
       keywords: keywords,
@@ -118,7 +113,7 @@ const App: React.FC = () => {
             ref={(el) => (paletteRefs.current[palette.paletteId] = el)}
             style={{ marginTop: "20px" }}
           >
-            <h2>Palette: {palette.paletteId}</h2>
+            <h2>{palette.paletteId}</h2>
             <div style={{ display: "flex" }}>
               {palette.colors.map((color, index) => (
                 <div
