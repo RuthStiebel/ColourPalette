@@ -127,10 +127,10 @@ const App: React.FC = () => {
             </div>
             <h3
               style={{ marginTop: "20px" }}
-              >Session History:</h3>
+              >Shades:</h3>
             <ul>
               {palette.history.map((entry, index) => (
-                <li key={index}>{entry}</li>
+                <li key={index}>{entry}</li> /*change history to color shades DEBUG*/
               ))}
             </ul>
           </div>
