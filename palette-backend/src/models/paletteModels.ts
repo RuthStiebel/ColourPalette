@@ -1,31 +1,27 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
-
+import mongoose, { Schema } from "mongoose";
 export interface Color {
   hex: string;
   rgb: [number, number, number];
 }
-
-export interface Palette extends Document {
+export interface Palette {
   paletteId: string;
-  userId: string;
+  userId: string; 
   colors: Color[];
   createdAt: Date;
-  history: Types.ObjectId[]; // References to other Palette documents
+  history: string[];
 }
 
-// Color schema
 const ColorSchema = new Schema<Color>({
-  hex: { type: String, required: true },
+  hex: { type: String, required: true }, 
   rgb: { type: [Number], required: true },
 });
 
-// Palette schema
 const PaletteSchema = new Schema<Palette>({
-  paletteId: { type: String, required: true },
+  paletteId: { type: String, required: true, unique: true },
   userId: { type: String, required: true },
   colors: [ColorSchema],
   createdAt: { type: Date, default: Date.now },
-  history: [{ type: Schema.Types.ObjectId, ref: "Palette" }], // References other palettes
+  history: [String],
 });
 
 export default mongoose.model<Palette>("Palette", PaletteSchema);

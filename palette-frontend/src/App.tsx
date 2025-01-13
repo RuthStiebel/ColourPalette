@@ -1,36 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Palette } from '../../palette-backend/src/models/paletteModels';
 
-const App: React.FC = () => { 
-  // State to manage user input for keywords (comma-separated values)
+const App: React.FC = () => {
   const [keywords, setKeywords] = useState<string>("");
-
-  // State to manage user input for the number of colors to generate (default: 5)
   const [numColors, setNumColors] = useState<number>(5);
-
-  // State to store the generated palette object retrieved from the API
-  const [palette, setPalette] = useState<Palette | null>(null); // Type the palette state
+  const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
-  const [userHistory, setUserHistory] = useState<string[]>([]); // Add userHistory state and setter
+  const [userHistory, setUserHistory] = useState<string[]>([]);
   const userId = "testUser123";
-  
+  const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
   const fetchUserPalettes = async () => {
     try {
-      const response = await fetch(`/api/palettes/${userId}`); // Dynamic user ID
+      const response = await fetch(`/api/palettes/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch user palettes");
       }
       const data: Palette[] = await response.json();
-      // Extract history entries from all palettes and combine them
+      setUserPalettes(data);
       const userHistory = data.flatMap((palette) => palette.history);
-      setUserHistory(userHistory); // Update userHistory state
+      setUserHistory(userHistory);
     } catch (error) {
       console.error("Error fetching user palettes:", error);
     }
   };
 
   useEffect(() => {
-    fetchUserPalettes(); // Call on component mount
+    fetchUserPalettes();
   }, []);
 
   const generatePalette = async () => {
@@ -41,8 +37,6 @@ const App: React.FC = () => {
       previousHistory: userHistory,
     };
 
-    console.log("Request Data:", requestData); // DEBUG Log the data being sent
-
     try {
       const response = await fetch("http://localhost:5000/api/palettes/generate", {
         method: "POST",
@@ -51,81 +45,129 @@ const App: React.FC = () => {
         },
         body: JSON.stringify(requestData),
       });
-      
+
       if (!response.ok) {
-        const errorData = await response.json(); // Try to parse error message from server
+        const errorData = await response.json();
         throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
       }
-      
-      const data : Palette = await response.json();
-      console.log("Response Data:", data); // DEBUG Log the data received from the backend
-      setPalette(data);
-      fetchUserPalettes(); // Refresh the list after generating a new palette
 
-    } catch (err : any) {
+      const data: Palette = await response.json();
+      setPalette(data);
+      fetchUserPalettes();
+    } catch (err: any) {
       console.error("Error generating palette:", err);
     }
   };
-  
+
+  const scrollToPalette = (paletteId: string) => {
+    if (paletteRefs.current[paletteId]) {
+      paletteRefs.current[paletteId]?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
-      {/* App Header */}
-      <h1>Generate Color Palette</h1>
-
-      {/* Input Section */}
-      <div>
-        {/* Input field for keywords */}
-        <input
-          type="text"
-          placeholder="Keywords (comma-separated)"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-        />
-
-        {/* Input field for the number of colors*/}
-        <input
-          type="number"
-          min="1"
-          max="10"
-          value={numColors}
-          onChange={(e) => setNumColors(Number(e.target.value))}
-        />
-
-        {/* Button to trigger palette generation */}
-        <button onClick={generatePalette}>Generate</button>
+    <div style={{ display: "flex", padding: "20px" }}>
+      {/* Sidebar for user history */}
+      <div style={{ width: "25%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
+        <h2>User History</h2>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {userPalettes.map((palette) => (
+            <li key={palette.paletteId} style={{ marginBottom: "10px" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {/* Display color blocks */}
+                {palette.colors.map((color, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: `rgb(${color.rgb.join(",")})`,
+                      marginRight: "5px",
+                    }}
+                  ></div>
+                ))}
+              </div>
+              <button
+                style={{ marginTop: "5px" }}
+                onClick={() => scrollToPalette(palette.paletteId)}
+              >
+                View Palette
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* Display Section */}
-      {/* DEBUG Log the palette state */}
-      {palette && (
-        <div>
-          {/* Display the palette id */}
-          <h2>Palette: {palette.paletteId}</h2>
-    
-          {/* Display the palette colors as colored squares */}
-          <div className="palette">
-            {/* Map over the colors array and display a colored square for each color */}
-            {palette.colors.map((color: any, index: number) => (
-              <div
-                key={index}
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  backgroundColor: `rgb(${color.rgb.join(",")})`,
-                }}
-              ></div>
-            ))}
-          </div>
+      {/* Main content */}
+      <div style={{ width: "75%", paddingLeft: "20px" }}>
+        <h1>Generate Color Palette</h1>
 
-          {/* Display the palette's generation history */}
-          <h3>History:</h3>
-          <ul>
-            {palette.history.map((entry: string, index: number) => (
-              <li key={index}>{entry}</li>
-            ))}
-          </ul>
+        <div>
+          <input
+            type="text"
+            placeholder="Keywords (comma-separated)"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
+          />
+          <input
+            type="number"
+            min="1"
+            max="10"
+            value={numColors}
+            onChange={(e) => setNumColors(Number(e.target.value))}
+          />
+          <button onClick={generatePalette}>Generate</button>
         </div>
-      )}
+
+        {palette && (
+          <div
+            ref={(el) => (paletteRefs.current[palette.paletteId] = el)}
+            style={{ marginTop: "20px" }}
+          >
+            <h2>Palette: {palette.paletteId}</h2>
+            <div style={{ display: "flex" }}>
+              {palette.colors.map((color, index) => (
+                <div
+                  key={index}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    backgroundColor: `rgb(${color.rgb.join(",")})`,
+                  }}
+                ></div>
+              ))}
+            </div>
+            <h3>History:</h3>
+            <ul>
+              {palette.history.map((entry, index) => (
+                <li key={index}>{entry}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {userPalettes.map((userPalette) => (
+          <div
+            key={userPalette.paletteId}
+            ref={(el) => (paletteRefs.current[userPalette.paletteId] = el)}
+            style={{ marginTop: "20px" }}
+          >
+            <h2>Palette: {userPalette.paletteId}</h2>
+            <div style={{ display: "flex" }}>
+              {userPalette.colors.map((color, index) => (
+                <div
+                  key={index}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    backgroundColor: `rgb(${color.rgb.join(",")})`,
+                  }}
+                ></div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
