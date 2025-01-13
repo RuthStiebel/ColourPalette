@@ -101,7 +101,7 @@ const App: React.FC = () => {
           <input
             type="number"
             min="1"
-            max="10"
+            max="6"
             value={numColors}
             onChange={(e) => setNumColors(Number(e.target.value))}
           />

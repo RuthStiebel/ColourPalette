@@ -81,6 +81,7 @@ export async function callOpenAI(cleanKeywords: string[], numColors: number): Pr
     }. Provide colors in hex format.`;
 
     // Fetch response from OpenAI API
+    console.log("Prompt" + prompt); //DEBUG
     const response = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
