@@ -137,7 +137,9 @@ const App: React.FC = () => {
                 ></div>
               ))}
             </div>
-            <h3>Session History:</h3>
+            <h3
+              style={{ marginTop: "20px" }}
+              >Session History:</h3>
             <ul>
               {palette.history.map((entry, index) => (
                 <li key={index}>{entry}</li>
