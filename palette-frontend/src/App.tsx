@@ -7,7 +7,6 @@ const App: React.FC = () => {
   const [numColors, setNumColors] = useState<number>(5);
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
-  const [userHistory, setUserHistory] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -52,14 +51,12 @@ const App: React.FC = () => {
     }
   }, [userId]); // Fetch user palettes when userId changes
 
-  /*have a local state for user history and update it with each new palette generatedQQ*/
   const generatePalette = async () => {
     if (!userId) return;
     const requestData = {
       keywords: keywords,
       numColors,
       userId: userId,
-      previousHistory: userHistory,
     };
 
     try {
@@ -77,8 +74,10 @@ const App: React.FC = () => {
       }
 
       const data: Palette = await response.json();
+
+      // Update local state without fetching again
       setPalette(data);
-      fetchUserPalettes();
+      setUserPalettes((prevPalettes) => [...prevPalettes, data]);
     } catch (err: any) {
       console.error("Error generating palette:", err);
     }
@@ -157,11 +156,6 @@ const App: React.FC = () => {
             <h3
               style={{ marginTop: "20px" }}
               >Shades:</h3>
-            <ul>
-              {palette.history.map((entry, index) => (
-                <li key={index}>{entry}</li> /*change history to color shades DEBUG*/
-              ))}
-            </ul>
           </div>
         )}
 
