@@ -8,7 +8,7 @@ export interface Palette {
   userId: string; 
   colors: Color[];
   createdAt: Date;
-  history: string[];
+  shades: Color[][];
 }
 
 const ColorSchema = new Schema<Color>({
@@ -21,7 +21,7 @@ const PaletteSchema = new Schema<Palette>({
   userId: { type: String, required: true },
   colors: [ColorSchema],
   createdAt: { type: Date, default: Date.now },
-  history: [String],
+  shades: [ColorSchema],
 });
 
 /*const userSchema = new Schema<User>({

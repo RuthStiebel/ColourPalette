@@ -25,7 +25,7 @@ export function validateAndCleanKeywords(keywords: any): string[] | null {
 }
 
 // Generate random colors if no keywords are provided
-export function generateColors(num: number): { rgb: [number, number, number]; hex: string }[] {
+export function generateColors(num: number): Color[] {
   const colors: { rgb: [number, number, number]; hex: string }[] = [];
   for (let i = 0; i < num; i++) {
     // Generate a random hex color
@@ -46,16 +46,29 @@ export function generateColors(num: number): { rgb: [number, number, number]; he
   return colors;
 }
 
+// Convert RGB to hex
+function rgbToHex(r: number, g: number, b: number): string {
+    return "#" + [r, g, b].map(x => {
+        const hex = x.toString(16)
+        return hex.length === 1 ? '0' + hex : hex
+    }).join('')
+}
+
 // Convert hex to RGB
-export function hexToRgb(hex: string): [number, number, number] | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [
-        parseInt(result[1], 16),
-        parseInt(result[2], 16),
-        parseInt(result[3], 16),
-      ]
-    : null;
+function hexToRgb(hex: string): [number, number, number] | null {
+    // Remove the # if it exists
+    hex = hex.replace("#", "");
+
+    // Parse the hex values
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+        return null;
+    }
+
+    return [r, g, b];
 }
 
 // Parse hex colors from OpenAI response
@@ -71,7 +84,7 @@ export function parseHexColors(content: string, numColors: number): Color[] {
   }));
 }
 // Call OpenAI to generate colors based on keywords
-export async function callOpenAI(cleanKeywords: string[], numColors: number): Promise<{ hex: string }[]> {
+export async function callOpenAI(cleanKeywords: string[], numColors: number): Promise<Color[]> {
   try {
     const client = await getOpenAIClient(); // Get the OpenAI client instance
 
@@ -114,5 +127,47 @@ export async function callOpenAI(cleanKeywords: string[], numColors: number): Pr
   }
 }
 
+// Function to lighten or darken a color
+function adjustColor(rgb: [number, number, number], amount: number): [number, number, number] {
+    return rgb.map(c => {
+        let newC = c + amount;
+        newC = Math.max(0, Math.min(255, newC)); // Clamp between 0 and 255
+        return newC;
+    }) as [number, number, number];
+}
+
+export function generateShadesAndTints(colors: Color[], numColors: number): Color[][] {
+    const allPalettes: Color[][] = [];
+    allPalettes.push(colors); // Add the original palette
+    for (let i=0; i<numColors; i++) {
+        const rgb = colors[i].rgb;
+        if (rgb) {
+            const darker1 = adjustColor(rgb, -20); // Slightly darker
+            const darker2 = adjustColor(rgb, -40); // Much darker
+            const lighter1 = adjustColor(rgb, 20); // Slightly lighter
+            const lighter2 = adjustColor(rgb, 40); // Much lighter
+
+            const darker1Hex = rgbToHex(...darker1);
+            const darker2Hex = rgbToHex(...darker2);
+            const lighter1Hex = rgbToHex(...lighter1);
+            const lighter2Hex = rgbToHex(...lighter2);
+            if (allPalettes.length == 1) {
+
+                allPalettes.push([{ hex: darker1Hex, rgb: darker1 }]);
+                allPalettes.push([{ hex: darker2Hex, rgb: darker2 }]);
+                allPalettes.push([{ hex: lighter1Hex, rgb: lighter1 }]);
+                allPalettes.push([{ hex: lighter2Hex, rgb: lighter2 }]);
+            }
+            else {
+                allPalettes[1].push({ hex: darker1Hex, rgb: darker1 });
+                allPalettes[2].push({ hex: darker2Hex, rgb: darker2 });
+                allPalettes[3].push({ hex: lighter1Hex, rgb: lighter1 });
+                allPalettes[4].push({ hex: lighter2Hex, rgb: lighter2 });
+            }
+        }
+    }
+
+    return allPalettes;
+}
 
 

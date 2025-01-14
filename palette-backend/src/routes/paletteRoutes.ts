@@ -5,6 +5,7 @@ import {
   validateAndCleanKeywords,
   generateColors,
   callOpenAI,
+  generateShadesAndTints,
 } from "../utils/colorUtils";
 
 const router = express.Router();
@@ -37,8 +38,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     
     try {
-      const { keywords, numColors, userId , previousHistory = [] } = req.body;
-      console.log("Incoming History Request Data:", JSON.stringify(previousHistory, null, 2)); // Log the incoming history JSON DEBUG - here problem. should be arrayQQ
+      const { keywords, numColors, userId } = req.body;
       
       // Validate inputs
       validateNumColors(numColors);
@@ -53,14 +53,16 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
       }
 
       // Create a new palette
-      const historyEntry = `Generated palette with ${
+      const promptEntry = `Generated palette with ${
         cleanKeywords ? "keywords: " + cleanKeywords.join(", ") : "no keywords"
       }.`;
+
+
       const palette = new Palette({
-        paletteId:  historyEntry + " " + new Date().toISOString(),
+        paletteId:  promptEntry + " " + new Date().toISOString(),
         userId: userId,
         colors : generatedColors,
-        history: [...previousHistory, historyEntry],
+        shades: [],
       });
            
       await palette.save(); // Save the palette to the database
@@ -69,11 +71,30 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         paletteId: palette.paletteId,
         userId: palette.userId,
         colors: palette.colors,
-        history: palette.history,
+        shades: palette.shades,
       });
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
   });
-   
+ /*
+  router.get("/palettes/:paletteId/shades", async (req: Request, res: Response) => {
+    try {
+        const paletteId = req.params.paletteId;
+        const palette = await Palette.findOne({ paletteId });
+
+        if (!palette) {
+            return res.status(404).json({ message: "Palette not found" });
+        }
+        if (palette.shades.length == 0) {
+            const generatedShades = await generateShadesAndTints(palette.colors, palette.colors.length);
+            palette.shades = [generatedShades[1], generatedShades[2], generatedShades[3], generatedShades[4]];
+            await palette.save()
+        }
+        res.json(palette.shades);
+    } catch (error) {
+        console.error("Error fetching shades:", error);
+        res.status(500).json({ message: (error as Error).message });
+    }
+  });*/
   export default router;
