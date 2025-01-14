@@ -24,4 +24,9 @@ const PaletteSchema = new Schema<Palette>({
   history: [String],
 });
 
+/*const userSchema = new Schema<User>({
+  userId: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+});*/
 export default mongoose.model<Palette>("Palette", PaletteSchema);

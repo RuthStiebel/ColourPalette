@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { v4 as uuidv4 } from 'uuid'; // Import the UUID generator
 import { Palette } from '../../palette-backend/src/models/paletteModels';
 
 const App: React.FC = () => {
@@ -7,10 +8,30 @@ const App: React.FC = () => {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userHistory, setUserHistory] = useState<string[]>([]);
-  const userId = "testUser121";
+  const [userId, setUserId] = useState<string | null>(null);
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
+  useEffect(() => {
+    // Check if a userId is already in local storage
+    const storedUserId = localStorage.getItem('userId');
+
+    if (storedUserId) {
+        // If it exists, use it
+        setUserId(storedUserId);
+    } else {
+        // If it doesn't exist, generate a new UUID
+        const newUserId = uuidv4();
+        setUserId(newUserId);
+        localStorage.setItem('userId', newUserId); // Store it in local storage
+        console.log("new user id is: ", newUserId)
+    }
+  }, []); // Empty dependency array ensures this runs only once
+
+
   const fetchUserPalettes = async () => {
+    if (!userId) { // Check if userId is available before fetching
+      return;
+    }
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
       const response = await fetch(`http://localhost:5000/api/palettes/${userId}`);
@@ -23,9 +44,17 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("Error fetching user palettes:", error);
     }
-  }; /*saves user palettes but not session DEBUG*/
-  
+  }; 
+
+  useEffect(() => {
+    if (userId) {
+        fetchUserPalettes();
+    }
+  }, [userId]); // Fetch user palettes when userId changes
+
+  /*have a local state for user history and update it with each new palette generatedQQ*/
   const generatePalette = async () => {
+    if (!userId) return;
     const requestData = {
       keywords: keywords,
       numColors,
