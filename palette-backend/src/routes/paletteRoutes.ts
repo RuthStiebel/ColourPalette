@@ -1,13 +1,8 @@
 import express, { Request, Response } from "express";
-import Palette from "../models/paletteModels";
-import {
-  validateNumColors,
-  validateAndCleanKeywords,
-  generateColors,
-  callOpenAI,
-  generateShadesAndTints,
-} from "../utils/colorUtils";
-
+import { PaletteModel, UserLimitModel } from "../models/paletteModels";
+import { handleDailyLimit } from "../utils/functionUtils";
+import { validateNumColors, validateAndCleanKeywords, generateColors, 
+  callOpenAI, generateShadesAndTints } from "../utils/colorUtils";
 const router = express.Router();
 
 // Test route
@@ -22,7 +17,7 @@ router.get("/palettes/:userId", async (req, res) => {
   try {
       const userId = req.params.userId;
       console.log("Fetching palettes for userId:", userId); // Check userId
-      const palettes = await Palette.find({ userId });
+      const palettes = await PaletteModel.find({ userId });
       console.log("Palettes found:", palettes); // Log the palettes
       console.log("Sending JSON response:", JSON.stringify(palettes, null, 2)); // Stringify for logging
       res.json(palettes);
@@ -40,39 +35,49 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     try {
       const { keywords, numColors, userId } = req.body;
       
-      // Validate inputs
-      validateNumColors(numColors);
-      const cleanKeywords = validateAndCleanKeywords(keywords);
-      
-      let generatedColors;
-      if (cleanKeywords == null) {
-        generatedColors = await generateColors(numColors);
+      // Check the user's daily limit
+      const limitStatus = await handleDailyLimit(userId);
+
+      if (limitStatus.status === "limit_exceeded") {
+        res.status(429).json({
+          message: "Daily limit reached. Please try again after midnight.",
+          resetTime: limitStatus.resetTime,
+        });
+      } else {
+        // Validate inputs
+        validateNumColors(numColors);
+        const cleanKeywords = validateAndCleanKeywords(keywords);
+        
+        let generatedColors;
+        if (cleanKeywords == null) {
+          generatedColors = await generateColors(numColors);
+        }
+        else {
+          generatedColors = await callOpenAI(cleanKeywords, numColors);
+        }
+  
+        // Create a new palette
+        const promptEntry = `Generated palette with ${
+          cleanKeywords ? "keywords: " + cleanKeywords.join(", ") : "no keywords"
+        }.`;
+  
+  
+        const palette = new PaletteModel({
+          paletteId:  promptEntry + " " + new Date().toISOString(),
+          userId: userId,
+          colors : generatedColors,
+          shades: [],
+        });
+             
+        await palette.save(); // Save the palette to the database
+  
+        res.status(201).json({
+          paletteId: palette.paletteId,
+          userId: palette.userId,
+          colors: palette.colors,
+          shades: palette.shades,
+        });
       }
-      else {
-        generatedColors = await callOpenAI(cleanKeywords, numColors);
-      }
-
-      // Create a new palette
-      const promptEntry = `Generated palette with ${
-        cleanKeywords ? "keywords: " + cleanKeywords.join(", ") : "no keywords"
-      }.`;
-
-
-      const palette = new Palette({
-        paletteId:  promptEntry + " " + new Date().toISOString(),
-        userId: userId,
-        colors : generatedColors,
-        shades: [],
-      });
-           
-      await palette.save(); // Save the palette to the database
-
-      res.status(201).json({
-        paletteId: palette.paletteId,
-        userId: palette.userId,
-        colors: palette.colors,
-        shades: palette.shades,
-      });
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
