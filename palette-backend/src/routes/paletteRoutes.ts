@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { PaletteModel, UserLimitModel } from "../models/paletteModels";
+import { PaletteModel } from "../models/paletteModels";
 import { handleDailyLimit } from "../utils/functionUtils";
 import { validateNumColors, validateAndCleanKeywords, generateColors, 
   callOpenAI, generateShadesAndTints } from "../utils/colorUtils";
