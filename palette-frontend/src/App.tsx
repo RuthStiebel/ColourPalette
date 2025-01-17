@@ -116,7 +116,8 @@ const App: React.FC = () => {
                   ></div>
                 ))}
               </div>
-              <button style={{ marginTop: "10px" }}>
+              <button style={{ marginTop: "10px" }}
+                onClick={() => setPalette(palette)} >
                 View Palette
               </button>
             </li>
