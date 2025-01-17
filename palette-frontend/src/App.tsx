@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // For error messages
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   useEffect(() => {
@@ -25,7 +26,6 @@ const App: React.FC = () => {
         console.log("new user id is: ", newUserId)
     }
   }, []); // Empty dependency array ensures this runs only once
-
 
   const fetchUserPalettes = async () => {
     if (!userId) { // Check if userId is available before fetching
@@ -53,6 +53,10 @@ const App: React.FC = () => {
 
   const generatePalette = async () => {
     if (!userId) return;
+
+    // Clear any previous error message
+    setErrorMessage(null);
+
     const requestData = {
       keywords: keywords,
       numColors,
@@ -70,7 +74,12 @@ const App: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        if (response.status === 429) { // Handle the daily limit case
+          setErrorMessage(errorData.message || "Daily limit reached. Please try again after midnight.");
+        } else {
+          throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        }
+        return; // Stop further execution
       }
 
       const data: Palette = await response.json();
@@ -80,6 +89,7 @@ const App: React.FC = () => {
       setUserPalettes((prevPalettes) => [...prevPalettes, data]);
     } catch (err: any) {
       console.error("Error generating palette:", err);
+      setErrorMessage(err.message || "An error occurred while generating the palette.");
     }
   };
 
@@ -135,6 +145,13 @@ const App: React.FC = () => {
           <button onClick={generatePalette}>Generate</button>
         </div>
 
+        {/* Display error message if any */}
+        {errorMessage && (
+          <div style={{ color: "red", marginTop: "10px" }}>
+            {errorMessage}
+          </div>
+        )}
+
         {palette && (
           <div
             ref={(el) => (paletteRefs.current[palette.paletteId] = el)}
@@ -153,9 +170,7 @@ const App: React.FC = () => {
                 ></div>
               ))}
             </div>
-            <h3
-              style={{ marginTop: "20px" }}
-              >Shades:</h3>
+            <h3 style={{ marginTop: "20px" }}>Shades:</h3>
           </div>
         )}
 
