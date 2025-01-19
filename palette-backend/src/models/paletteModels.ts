@@ -29,7 +29,7 @@ const PaletteSchema: Schema<Palette> = new Schema({
   userId: { type: String, required: true },
   colors: [ColorSchema],
   createdAt: { type: Date, default: Date.now },
-  shades: [ColorSchema],
+  shades: [[ColorSchema]],
 });
 
 const UserLimitSchema: Schema<UserLimit> = new Schema({
