@@ -142,31 +142,31 @@ export function generateShadesAndTints(colors: Color[], numColors: number): Colo
     for (let i=0; i<numColors; i++) {
         const rgb = colors[i].rgb;
         if (rgb) {
-            const darker1 = adjustColor(rgb, -20); // Slightly darker
-            const darker2 = adjustColor(rgb, -40); // Much darker
-            const lighter1 = adjustColor(rgb, 20); // Slightly lighter
-            const lighter2 = adjustColor(rgb, 40); // Much lighter
+            const darker1 = adjustColor(rgb, -60); // Slightly darker
+            const darker2 = adjustColor(rgb, -100); // Much darker
+          //  const lighter1 = adjustColor(rgb, 20); // Slightly lighter
+          //  const lighter2 = adjustColor(rgb, 40); // Much lighter
 
             const darker1Hex = rgbToHex(...darker1);
             const darker2Hex = rgbToHex(...darker2);
-            const lighter1Hex = rgbToHex(...lighter1);
-            const lighter2Hex = rgbToHex(...lighter2);
+          //  const lighter1Hex = rgbToHex(...lighter1);
+          //  const lighter2Hex = rgbToHex(...lighter2);
             if (allPalettes.length == 1) {
 
                 allPalettes.push([{ hex: darker1Hex, rgb: darker1 }]);
                 allPalettes.push([{ hex: darker2Hex, rgb: darker2 }]);
-                allPalettes.push([{ hex: lighter1Hex, rgb: lighter1 }]);
-                allPalettes.push([{ hex: lighter2Hex, rgb: lighter2 }]);
+           //     allPalettes.push([{ hex: lighter1Hex, rgb: lighter1 }]);
+           //     allPalettes.push([{ hex: lighter2Hex, rgb: lighter2 }]);
             }
             else {
                 allPalettes[1].push({ hex: darker1Hex, rgb: darker1 });
                 allPalettes[2].push({ hex: darker2Hex, rgb: darker2 });
-                allPalettes[3].push({ hex: lighter1Hex, rgb: lighter1 });
-                allPalettes[4].push({ hex: lighter2Hex, rgb: lighter2 });
+          //      allPalettes[3].push({ hex: lighter1Hex, rgb: lighter1 });
+          //      allPalettes[4].push({ hex: lighter2Hex, rgb: lighter2 });
             }
         }
     }
-
+    console.log("Generated shades:", allPalettes); //DEBUG
     return allPalettes;
 }
 
