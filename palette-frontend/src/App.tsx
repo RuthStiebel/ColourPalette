@@ -33,7 +33,7 @@ const App: React.FC = () => {
     }
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
-      const response = await fetch(`https://colourpalettebackend.onrender.com/api/palettes/${userId}`);
+      const response = await fetch(`http://localhost:5000/api/palettes/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch user palettes");
       }
@@ -64,7 +64,7 @@ const App: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://colourpalettebackend.onrender.com/api/palettes/generate", {
+      const response = await fetch("http://localhost:5000/api/palettes/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const App: React.FC = () => {
       }
 
       const data: Palette = await response.json();
-
+      console.log("Generated palette:", data); //DEBUG
       // Update local state without fetching again
       setPalette(data);
       setUserPalettes((prevPalettes) => [...prevPalettes, data]);
@@ -159,6 +159,7 @@ const App: React.FC = () => {
             style={{ marginTop: "20px" }}
           >
             <h2>{palette.paletteId}</h2>
+            {/* Main Palette */}
             <div style={{ display: "flex" }}>
               {palette.colors.map((color, index) => (
                 <div
@@ -171,7 +172,27 @@ const App: React.FC = () => {
                 ></div>
               ))}
             </div>
+            {/* Shades */}
             <h3 style={{ marginTop: "20px" }}>Shades:</h3>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {palette.shades.map((shadesRow, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  style={{ display: "flex", marginBottom: "20px" }} // Adjust margin for row spacing
+                >
+                  {shadesRow.map((shade, shadeIndex) => (
+                    <div
+                      key={shadeIndex}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        backgroundColor: `rgb(${shade.rgb.join(",")})`,
+                      }}
+                    ></div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
