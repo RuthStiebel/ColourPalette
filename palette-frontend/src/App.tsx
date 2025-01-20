@@ -33,7 +33,7 @@ const App: React.FC = () => {
     }
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
-      const response = await fetch(`https://colourpalettebackend.onrender.com/api/palettes/${userId}`);
+      const response = await fetch(`http://localhost:5000/api/palettes/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch user palettes");
       }
@@ -64,7 +64,7 @@ const App: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://colourpalettebackend.onrender.com/api/palettes/generate", {
+      const response = await fetch("http://localhost:5000/api/palettes/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,6 +168,7 @@ const App: React.FC = () => {
                     width: "50px",
                     height: "50px",
                     backgroundColor: `rgb(${color.rgb.join(",")})`,
+                    margin: "5px",
                   }}
                 ></div>
               ))}
@@ -187,6 +188,7 @@ const App: React.FC = () => {
                         width: "50px",
                         height: "50px",
                         backgroundColor: `rgb(${shade.rgb.join(",")})`,
+                        margin: "5px",
                       }}
                     ></div>
                   ))}
