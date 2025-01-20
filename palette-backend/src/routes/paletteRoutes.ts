@@ -7,11 +7,11 @@ const router = express.Router();
 
 // Test route
 router.get("/", (req: Request, res: Response) => {
+  console.log("Request received for /api"); // Check if route is hit DEBUG
   res.send("Palette API is running...");
 });
 
 router.get("/ichs", (req: Request, res: Response) => {
-  console.log("Request received for /ichs"); // Check if route is hit DEBUG
   res.send("Palette API ichs is running...");
 });
 
