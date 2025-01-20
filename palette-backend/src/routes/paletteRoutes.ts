@@ -10,6 +10,10 @@ router.get("/", (req: Request, res: Response) => {
   res.send("Palette API is running...");
 });
 
+router.get("/ichs", (req: Request, res: Response) => {
+  res.send("Palette API ichs is running...");
+});
+
 // Get all palettes for a specific userId
 router.get("/palettes/:userId", async (req, res) => {
   console.log("Request received for /palettes/:userId"); // Check if route is hit DEBUG
