@@ -10,6 +10,7 @@ const App: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // For error messages
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
   useEffect(() => {
     // Check if a userId is already in local storage
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     }
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
-      const response = await fetch(`https://colourpalettebackend.onrender.com/api/palettes/${userId}`);
+      const response = await fetch(`${BACKEND_URL}/api/palettes/${userId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch user palettes");
       }
@@ -64,7 +65,7 @@ const App: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://colourpalettebackend.onrender.com/api/palettes/generate", {
+      const response = await fetch(`${BACKEND_URL}/api/palettes/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
