@@ -33,14 +33,31 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserLimitModel = exports.PaletteModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+// Define Color Schema
 const ColorSchema = new mongoose_1.Schema({
+    hex: { type: String, required: true },
     rgb: { type: [Number], required: true },
 });
+// Define Palette Schema
 const PaletteSchema = new mongoose_1.Schema({
     paletteId: { type: String, required: true, unique: true },
+    userId: { type: String, required: true },
     colors: [ColorSchema],
     createdAt: { type: Date, default: Date.now },
-    history: [String],
+    shades: [[ColorSchema]],
 });
-exports.default = mongoose_1.default.model("Palette", PaletteSchema);
+const UserLimitSchema = new mongoose_1.Schema({
+    userId: { type: String, required: true, unique: true },
+    count: { type: Number, required: true, default: 0 },
+    lastReset: { type: Date, required: true, default: Date.now },
+});
+/*const userSchema = new Schema<User>({
+  userId: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+});*/
+// Export Models
+exports.PaletteModel = mongoose_1.default.model("Palette", PaletteSchema);
+exports.UserLimitModel = mongoose_1.default.model("UserLimit", UserLimitSchema);
