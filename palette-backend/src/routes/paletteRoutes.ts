@@ -11,6 +11,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 router.get("/ichs", (req: Request, res: Response) => {
+  console.log("Request received for /ichs"); // Check if route is hit DEBUG
   res.send("Palette API ichs is running...");
 });
 
