@@ -9,6 +9,7 @@ const App: React.FC = () => {
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // For error messages
+  const [loading, setLoading] = useState<boolean>(false); // New loading state
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
@@ -57,6 +58,7 @@ const App: React.FC = () => {
 
     // Clear any previous error message
     setErrorMessage(null);
+    setLoading(true); // Start loading
 
     const requestData = {
       keywords: keywords,
@@ -91,6 +93,8 @@ const App: React.FC = () => {
     } catch (err: any) {
       console.error("Error generating palette:", err);
       setErrorMessage(err.message || "An error occurred while generating the palette.");
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -151,6 +155,13 @@ const App: React.FC = () => {
         {errorMessage && (
           <div style={{ color: "red", marginTop: "10px" }}>
             {errorMessage}
+          </div>
+        )}
+
+        {/* Loader */}
+        {loading && (
+          <div style={{ marginTop: "20px" }}>
+            <strong>Loading...</strong>
           </div>
         )}
 
