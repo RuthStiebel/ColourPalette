@@ -11,7 +11,9 @@ const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // For error messages
   const [loading, setLoading] = useState<boolean>(false); // New loading state
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const BACKEND_URL = "https://colourpalettebackend.onrender.com";
+  const BACKEND_URL = "http://localhost:5000"; // Backend URL
+  const MAX_NUM_COLORS = 5; // Maximum number of colors
+  //const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
   useEffect(() => {
     // Check if a userId is already in local storage
@@ -55,6 +57,12 @@ const App: React.FC = () => {
 
   const generatePalette = async () => {
     if (!userId) return;
+
+    // Validate numColors input
+    if (numColors > MAX_NUM_COLORS) {
+      setErrorMessage(`The number of colors must be ${MAX_NUM_COLORS} or less.`);
+      return; // Prevent palette generation
+    }
 
     // Clear any previous error message
     setErrorMessage(null);
@@ -144,7 +152,7 @@ const App: React.FC = () => {
           <input
             type="number"
             min="1"
-            max="4"
+            max={MAX_NUM_COLORS}
             value={numColors}
             onChange={(e) => setNumColors(Number(e.target.value))}
           />
