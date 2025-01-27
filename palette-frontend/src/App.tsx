@@ -10,6 +10,7 @@ const App: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // For error messages
   const [loading, setLoading] = useState<boolean>(false); // New loading state
+  const [popupMessage, setPopupMessage] = useState<string | null>(null); // Popup state
   const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const BACKEND_URL = "http://localhost:5000"; // Backend URL
   const MAX_NUM_COLORS = 5; // Maximum number of colors
@@ -60,7 +61,7 @@ const App: React.FC = () => {
 
     // Validate numColors input
     if (numColors > MAX_NUM_COLORS) {
-      setErrorMessage(`The number of colors must be ${MAX_NUM_COLORS} or less.`);
+      showPopupMessage(`The number of colors must be ${MAX_NUM_COLORS} or less.`);
       return; // Prevent palette generation
     }
 
@@ -86,7 +87,7 @@ const App: React.FC = () => {
       if (!response.ok) {
         const errorData = await response.json();
         if (response.status === 429) { // Handle the daily limit case
-          setErrorMessage(errorData.message || "Daily limit reached. Please try again after midnight.");
+          showPopupMessage(errorData.message || "Daily limit reached. Please try again after midnight.");
         } else {
           throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
         }
@@ -106,8 +107,30 @@ const App: React.FC = () => {
     }
   };
 
+  const showPopupMessage = (message: string) => {
+    setPopupMessage(message);
+    setTimeout(() => setPopupMessage(null), 5000); // Popup disappears after 3 seconds
+  };
+
   return (
     <div style={{ display: "flex", padding: "20px" }}>
+      {popupMessage && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            zIndex: 1000,
+          }}
+        >
+          {popupMessage}
+        </div>
+      )}
+      
       {/* Sidebar for user history */}
       <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
         <h2>User History</h2> 
@@ -180,7 +203,7 @@ const App: React.FC = () => {
           >
             <h2>{palette.paletteId}</h2>
             {/* Main Palette */}
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
               {palette.colors.map((color, index) => (
                 <div
                   key={index}
@@ -218,14 +241,6 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {userPalettes.map((userPalette) => (
-          <div
-            key={userPalette.paletteId}
-            ref={(el) => (paletteRefs.current[userPalette.paletteId] = el)}
-            style={{ marginTop: "20px" }}
-          >
-          </div>
-        ))}
       </div>
     </div>
   );
