@@ -1,4 +1,5 @@
 import mongoose, { Schema, Model, Document } from "mongoose";
+
 export interface Color {
   hex: string;
   rgb: [number, number, number];
