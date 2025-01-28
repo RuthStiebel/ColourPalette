@@ -69,14 +69,14 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         const generatedShades = await generateShadesAndTints(generatedColors, generatedColors.length);
   
         const palette = new PaletteModel({
-          paletteId:  promptEntry + " " + new Date().toISOString(),
+          paletteId:  promptEntry + " \n" + new Date().toISOString(),
           userId: userId,
           colors : generatedColors,
           shades: [generatedShades[1], generatedShades[2]],
         });
-             
         await palette.save(); // Save the palette to the database
-  
+        
+        console.log("Palette ID:", palette.paletteId); //DEBUG   
         console.log("Generated shades:", palette.shades); //DEBUG
         res.status(201).json({
           paletteId: palette.paletteId,
