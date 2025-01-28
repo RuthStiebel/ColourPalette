@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from 'uuid'; // Import the UUID generator
-import { Palette } from '../../palette-backend/src/models/paletteModels';
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { Palette } from "../../palette-backend/src/models/paletteModels";
+import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 
 const App: React.FC = () => {
   const [keywords, setKeywords] = useState<string>("");
@@ -8,34 +9,32 @@ const App: React.FC = () => {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // For error messages
-  const [loading, setLoading] = useState<boolean>(false); // New loading state
-  const [popupMessage, setPopupMessage] = useState<string | null>(null); // Popup state
-  const paletteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const BACKEND_URL = "http://localhost:5000"; // Backend URL
   const MAX_NUM_COLORS = 5; // Maximum number of colors
   //const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
   useEffect(() => {
     // Check if a userId is already in local storage
-    const storedUserId = localStorage.getItem('userId');
-
+    const storedUserId = localStorage.getItem("userId");
+    
     if (storedUserId) {
-        // If it exists, use it
-        setUserId(storedUserId);
+      // If it exists, use it
+      setUserId(storedUserId);
     } else {
-        // If it doesn't exist, generate a new UUID
-        const newUserId = uuidv4();
-        setUserId(newUserId);
-        localStorage.setItem('userId', newUserId); // Store it in local storage
-        console.log("new user id is: ", newUserId)
+      // If it doesn't exist, generate a new UUID
+      const newUserId = uuidv4();
+      setUserId(newUserId);
+      localStorage.setItem("userId", newUserId); 
+      console.log("new user id is: ", newUserId); //DEBUG
     }
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   const fetchUserPalettes = async () => {
-    if (!userId) { // Check if userId is available before fetching
-      return;
-    }
+    if (!userId) return;  // Check if userId is available before fetching palettes
+    
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
       const response = await fetch(`${BACKEND_URL}/api/palettes/${userId}`);
@@ -48,12 +47,10 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("Error fetching user palettes:", error);
     }
-  }; 
+  };
 
   useEffect(() => {
-    if (userId) {
-        fetchUserPalettes();
-    }
+    if (userId) fetchUserPalettes();
   }, [userId]); // Fetch user palettes when userId changes
 
   const generatePalette = async () => {
@@ -62,12 +59,12 @@ const App: React.FC = () => {
     // Validate numColors input
     if (numColors > MAX_NUM_COLORS) {
       showPopupMessage(`The number of colors must be ${MAX_NUM_COLORS} or less.`);
-      return; // Prevent palette generation
+      return; // Prevent palette generation if numColors is invalid
     }
-
+    
     // Clear any previous error message
     setErrorMessage(null);
-    setLoading(true); // Start loading
+    setLoading(true);
 
     const requestData = {
       keywords: keywords,
@@ -78,38 +75,36 @@ const App: React.FC = () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/palettes/generate`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        if (response.status === 429) { // Handle the daily limit case
-          showPopupMessage(errorData.message || "Daily limit reached. Please try again after midnight.");
+        if (response.status === 429) {  // Handle the daily limit case
+          showPopupMessage(errorData.message || "Daily limit reached.");
         } else {
           throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
         }
-        return; // Stop further execution
+        return;
       }
 
       const data: Palette = await response.json();
       console.log("Generated palette:", data); //DEBUG
       // Update local state without fetching again
       setPalette(data);
-      setUserPalettes((prevPalettes) => [...prevPalettes, data]);
+      setUserPalettes((prev) => [...prev, data]);
     } catch (err: any) {
       console.error("Error generating palette:", err);
-      setErrorMessage(err.message || "An error occurred while generating the palette.");
+      setErrorMessage(err.message || "An error occurred.");
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); // End loading 
     }
   };
 
   const showPopupMessage = (message: string) => {
     setPopupMessage(message);
-    setTimeout(() => setPopupMessage(null), 5000); // Popup disappears after 3 seconds
+    setTimeout(() => setPopupMessage(null), 5000); // Popup disappears after 5 seconds
   };
 
   return (
@@ -130,113 +125,101 @@ const App: React.FC = () => {
           {popupMessage}
         </div>
       )}
-      
-      {/* Sidebar for user history */}
+
+      {/* User History Section */}
       <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
-        <h2>User History</h2> 
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {/* Reverse the userPalettes array before mapping */}
+        <h2>User History</h2>
+        <Stack spacing={2}>
           {userPalettes.slice().reverse().map((palette) => (
-            <li key={palette.paletteId} style={{ marginBottom: "10px" }}>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {/* Display color blocks */}
-                {palette.colors.map((color, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      width: "70px",
-                      height: "20px",
-                      backgroundColor: `rgb(${color.rgb.join(",")})`,
-                      marginRight: "5px",
-                    }}
-                  ></div>
-                ))}
-              </div>
-              <button style={{ marginTop: "10px" }}
-                onClick={() => setPalette(palette)} >
-                View Palette
-              </button>
-            </li>
+            <Card key={palette.paletteId}>
+              <CardContent>
+                <Typography variant="subtitle1" align="center" gutterBottom>
+                  {palette.paletteId}
+                </Typography>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  {palette.colors.map((color, index) => (
+                    <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                      <div
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          backgroundColor: `rgb(${color.rgb.join(",")})`,
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          width: "50px",
+                          height: "20px",
+                          backgroundColor: `rgb(${palette.shades[0][index].rgb.join(",")})`,
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          width: "50px",
+                          height: "20px",
+                          backgroundColor: `rgb(${palette.shades[1][index].rgb.join(",")})`,
+                        }}
+                      ></div>
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => setPalette(palette)}
+                  style={{ marginTop: "10px" }}
+                >
+                  Show Palette
+                </Button>
+              </CardContent>
+            </Card>
           ))}
-        </ul>
+        </Stack>
       </div>
 
-      {/* Main content */}
+      {/* Generate Palette Section */}
       <div style={{ width: "75%", paddingLeft: "20px" }}>
         <h1>Generate Color Palette</h1>
+        <input type="text" placeholder="Keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+        <input type="number" min="1" max={MAX_NUM_COLORS} value={numColors} onChange={(e) => setNumColors(Number(e.target.value))} />
+        <Button variant="contained" onClick={generatePalette}>Generate</Button>
+        {errorMessage && <div style={{ color: "red", marginTop: "10px" }}>{errorMessage}</div>}
+        {loading && <div style={{ marginTop: "20px" }}><strong>Loading...</strong></div>}
 
-        <div>
-          <input
-            type="text"
-            placeholder="Keywords (comma-separated)"
-            value={keywords}
-            onChange={(e) => setKeywords(e.target.value)}
-          />
-          <input
-            type="number"
-            min="1"
-            max={MAX_NUM_COLORS}
-            value={numColors}
-            onChange={(e) => setNumColors(Number(e.target.value))}
-          />
-          <button onClick={generatePalette}>Generate</button>
-        </div>
-
-        {/* Display error message if any */}
-        {errorMessage && (
-          <div style={{ color: "red", marginTop: "10px" }}>
-            {errorMessage}
-          </div>
-        )}
-
-        {/* Loader */}
-        {loading && (
-          <div style={{ marginTop: "20px" }}>
-            <strong>Loading...</strong>
-          </div>
-        )}
-
+        {/* Display Generated Palette */}
         {palette && (
-          <div
-            ref={(el) => (paletteRefs.current[palette.paletteId] = el)}
-            style={{ marginTop: "20px" }}
-          >
-            <h2>{palette.paletteId}</h2>
-            {/* Main Palette */}
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              {palette.colors.map((color, index) => (
-                <div
-                  key={index}
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    backgroundColor: `rgb(${color.rgb.join(",")})`,
-                  }}
-                ></div>
-              ))}
-            </div>
-            {/* Shades */}
-            <h3 style={{ marginTop: "20px" }}>Shades:</h3>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {palette.shades.map((shadesRow, rowIndex) => (
-                <div
-                  key={rowIndex}
-                  style={{ display: "flex", marginBottom: "20px" }} // Adjust margin for row spacing
-                >
-                  {shadesRow.map((shade, shadeIndex) => (
+          <Card style={{ marginTop: "20px" }}>
+            <CardContent>
+              <Typography variant="h5">{palette.paletteId}</Typography>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                {palette.colors.map((color, index) => (
+                  <div key={index} style={{ display: "flex", flexDirection: "column" }}>
                     <div
-                      key={shadeIndex}
                       style={{
                         width: "50px",
                         height: "50px",
-                        backgroundColor: `rgb(${shade.rgb.join(",")})`,
+                        backgroundColor: `rgb(${color.rgb.join(",")})`,
                       }}
                     ></div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+                    <div
+                      style={{
+                        width: "50px",
+                        height: "20px",
+                        backgroundColor: `rgb(${palette.shades[0][index].rgb.join(",")})`,
+                      }}
+                    ></div>
+                    <div
+                      style={{
+                        width: "50px",
+                        height: "20px",
+                        backgroundColor: `rgb(${palette.shades[1][index].rgb.join(",")})`,
+                      }}
+                    ></div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
