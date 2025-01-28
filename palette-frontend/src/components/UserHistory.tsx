@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, Stack, Typography, Button } from "@mui/material";
 import { Palette } from "../../../palette-backend/src/models/paletteModels";
 import PaletteDisplay from "./PaletteDisplay";
