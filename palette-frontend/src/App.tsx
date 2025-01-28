@@ -4,6 +4,7 @@ import { Palette } from "../../palette-backend/src/models/paletteModels";
 import UserHistory from "./components/UserHistory";
 import PaletteDisplay from "./components/PaletteDisplay";
 import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
+import { MAX_NUM_COLORS } from "./utils/globals";
 
 const App: React.FC = () => {
   const [keywords, setKeywords] = useState<string>("");
@@ -15,7 +16,6 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const BACKEND_URL = "http://localhost:5000"; // Backend URL
-  const MAX_NUM_COLORS = 5; // Maximum number of colors
   //const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
   useEffect(() => {

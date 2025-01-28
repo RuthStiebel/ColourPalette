@@ -1,0 +1,1 @@
+export const MAX_NUM_COLORS = 5; // Maximum number of colors
