@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, Stack, Typography, Button } from "@mui/material";
 import { Palette } from "../../../palette-backend/src/models/paletteModels";
+import PaletteDisplay from "./PaletteDisplay";
 
 interface PaletteHistoryProps {
   userPalettes: Palette[];
@@ -53,11 +54,20 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({ userPalettes, onSelectP
                     </Stack>
                   ))}
                 </Stack>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() =>  {palette && <PaletteDisplay palette={palette} />}}
+                  style={{ marginTop: "10px" }}
+                >
+                  Show Palette
+                </Button>
               </CardContent>
             </Card>
           ))
         )}
       </Stack>
+      
     </div>
   );
 };
