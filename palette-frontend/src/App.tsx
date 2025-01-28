@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Palette } from "../../palette-backend/src/models/paletteModels";
+import UserHistory from "./components/UserHistory";
 import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 
 const App: React.FC = () => {
@@ -132,59 +133,7 @@ const App: React.FC = () => {
       )}
 
       {/* User History Section */}
-      <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
-        <h2>User History</h2>
-        <Button variant="contained" color="error" fullWidth onClick={clearHistory}>
-          Clear History
-        </Button>
-        <Stack spacing={2}>
-          {userPalettes.slice().reverse().map((palette) => (
-            <Card key={palette.paletteId}>
-              <CardContent>
-                <Typography variant="subtitle1" align="center" gutterBottom>
-                  {palette.paletteId}
-                </Typography>
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  {palette.colors.map((color, index) => (
-                    <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-                      <div
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          backgroundColor: `rgb(${color.rgb.join(",")})`,
-                        }}
-                      ></div>
-                      {/* Display shades */}
-                      <div
-                        style={{
-                          width: "50px",
-                          height: "20px",
-                          backgroundColor: `rgb(${palette.shades[0][index].rgb.join(",")})`,
-                        }}
-                      ></div>
-                      <div
-                        style={{
-                          width: "50px",
-                          height: "20px",
-                          backgroundColor: `rgb(${palette.shades[1][index].rgb.join(",")})`,
-                        }}
-                      ></div>
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={() => setPalette(palette)}
-                  style={{ marginTop: "10px" }}
-                >
-                  Show Palette
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
-      </div>
+      <UserHistory userPalettes={userPalettes} onSelectPalette={setPalette} clearHistory={clearHistory} />
 
       {/* Generate Palette Section */}
       <div style={{ width: "75%", paddingLeft: "20px" }}>

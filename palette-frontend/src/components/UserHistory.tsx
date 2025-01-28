@@ -11,13 +11,12 @@ interface PaletteHistoryProps {
 const PaletteHistory: React.FC<PaletteHistoryProps> = ({ userPalettes, onSelectPalette, clearHistory }) => {
   return (
     <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <h2>User History</h2>
-        <Button variant="outlined" color="secondary" onClick={clearHistory}>
-          Clear History
-        </Button>
-      </Stack>
-
+      <div style={{marginBottom: "10px"}}>
+      <h2>User History</h2>
+      <Button variant="contained" color="error" fullWidth onClick={clearHistory}>
+        Clear History
+      </Button>
+      </div>
       <Stack spacing={2}>
         {userPalettes.length === 0 ? (
           <Typography color="textSecondary">No palettes saved yet.</Typography>
