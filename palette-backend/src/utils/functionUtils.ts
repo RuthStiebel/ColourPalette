@@ -1,6 +1,6 @@
 import { UserLimitModel } from "../models/paletteModels";
 
-const DAILY_LIMIT = 50; // Set your daily limit
+const DAILY_LIMIT = 150; // Set your daily limit
 
 const isNewDay = (lastReset: Date): boolean => {
     const now = new Date();
