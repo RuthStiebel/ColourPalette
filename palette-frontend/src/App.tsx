@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Palette } from "../../palette-backend/src/models/paletteModels";
 import UserHistory from "./components/UserHistory";
+import PaletteDisplay from "./components/PaletteDisplay";
 import { Card, CardContent, Typography, Button, Stack } from "@mui/material";
 
 const App: React.FC = () => {
@@ -145,40 +146,7 @@ const App: React.FC = () => {
         {loading && <div style={{ marginTop: "20px" }}><strong>Loading...</strong></div>}
 
         {/* Display Generated Palette */}
-        {palette && (
-          <Card style={{ marginTop: "20px" }}>
-            <CardContent>
-              <Typography variant="h5">{palette.paletteId}</Typography>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                {palette.colors.map((color, index) => (
-                  <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-                    <div
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        backgroundColor: `rgb(${color.rgb.join(",")})`,
-                      }}
-                    ></div>
-                    <div
-                      style={{
-                        width: "50px",
-                        height: "20px",
-                        backgroundColor: `rgb(${palette.shades[0][index].rgb.join(",")})`,
-                      }}
-                    ></div>
-                    <div
-                      style={{
-                        width: "50px",
-                        height: "20px",
-                        backgroundColor: `rgb(${palette.shades[1][index].rgb.join(",")})`,
-                      }}
-                    ></div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {palette && <PaletteDisplay palette={palette} />}
       </div>
     </div>
   );
