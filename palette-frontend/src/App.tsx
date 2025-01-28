@@ -107,6 +107,11 @@ const App: React.FC = () => {
     setTimeout(() => setPopupMessage(null), 5000); // Popup disappears after 5 seconds
   };
 
+  const clearHistory = () => {
+    setUserPalettes([]); // Set userPalettes to an empty array
+    localStorage.removeItem("palettes"); // Remove palettes from localStorage
+  };
+
   return (
     <div style={{ display: "flex", padding: "20px" }}>
       {popupMessage && (
@@ -129,6 +134,9 @@ const App: React.FC = () => {
       {/* User History Section */}
       <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
         <h2>User History</h2>
+        <Button variant="contained" color="error" fullWidth onClick={clearHistory}>
+          Clear History
+        </Button>
         <Stack spacing={2}>
           {userPalettes.slice().reverse().map((palette) => (
             <Card key={palette.paletteId}>
@@ -146,6 +154,7 @@ const App: React.FC = () => {
                           backgroundColor: `rgb(${color.rgb.join(",")})`,
                         }}
                       ></div>
+                      {/* Display shades */}
                       <div
                         style={{
                           width: "50px",
