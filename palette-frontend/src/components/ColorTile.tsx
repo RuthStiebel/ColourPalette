@@ -1,10 +1,7 @@
 import React, { useState } from "react";
+import { Color } from "../../../palette-backend/src/models/paletteModels";
 
-interface ColorTileProps {
-  rgb: number[];
-}
-
-const ColorTile: React.FC<ColorTileProps> = ({ rgb }) => {
+const ColorTile: React.FC<Color> = ({ rgb }) => {
   const [isHovered, setIsHovered] = useState(false);
   const hex = `#${rgb.map((val) => val.toString(16).padStart(2, "0")).join("")}`;
 
