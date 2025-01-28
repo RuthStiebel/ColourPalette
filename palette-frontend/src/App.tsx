@@ -203,7 +203,7 @@ const App: React.FC = () => {
           >
             <h2>{palette.paletteId}</h2>
             {/* Main Palette */}
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               {palette.colors.map((color, index) => (
                 <div
                   key={index}
@@ -211,7 +211,6 @@ const App: React.FC = () => {
                     width: "50px",
                     height: "50px",
                     backgroundColor: `rgb(${color.rgb.join(",")})`,
-                    margin: "5px",
                   }}
                 ></div>
               ))}
@@ -231,7 +230,6 @@ const App: React.FC = () => {
                         width: "50px",
                         height: "50px",
                         backgroundColor: `rgb(${shade.rgb.join(",")})`,
-                        margin: "5px",
                       }}
                     ></div>
                   ))}
@@ -240,7 +238,6 @@ const App: React.FC = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
