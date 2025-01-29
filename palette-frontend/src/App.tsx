@@ -110,10 +110,27 @@ const App: React.FC = () => {
     setTimeout(() => setPopupMessage(null), 5000); // Popup disappears after 5 seconds
   };
 
-  const clearHistory = () => {
-    setUserPalettes([]); // Set userPalettes to an empty array
-    localStorage.removeItem("palettes"); // Remove palettes from localStorage
+  const clearHistory = async () => {
+    if (!userId) return;
+  
+    try {
+      // Clear from backend
+      const response = await fetch(`${BACKEND_URL}/api/palettes/user/${userId}`, { method: "DELETE" });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to delete: ${response.statusText}`);
+      }
+        
+      // Clear from local storage
+      localStorage.removeItem("userPalettes");
+            
+      // Clear state
+      setUserPalettes([]);
+    } catch (error) {
+      console.error("Error clearing history:", error);
+    }
   };
+  
 
   return (
     <div style={{ display: "flex", padding: "20px" }}>
