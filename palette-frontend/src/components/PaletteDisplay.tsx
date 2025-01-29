@@ -68,7 +68,8 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                 }}
                 onMouseEnter={() => setHoveredColor(shade.hex)}
                 onMouseLeave={() => setHoveredColor(null)}
-              >
+              >              
+              {/* Show HEX Code on Hover */}
                 {hoveredColor === shade.hex && (
                   <div
                     style={{
@@ -100,9 +101,21 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                 onMouseEnter={() => setHoveredColor(palette.shades[1][shadeIndex].hex)} // Correct hover
                 onMouseLeave={() => setHoveredColor(null)}
               >
+                {/* Show HEX Code on Hover */}
                 {hoveredColor === palette.shades[1][shadeIndex].hex && ( // Correct hover
                   <div
-                    style={{ /* ... same styles as above ... */ }}
+                    style={{
+                      position: "absolute",
+                      bottom: "25px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      backgroundColor: "black",
+                      color: "white",
+                      padding: "3px",
+                      borderRadius: "5px",
+                      fontSize: "10px",
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     {palette.shades[1][shadeIndex].hex}
                   </div>
