@@ -33,26 +33,29 @@ router.get("/palettes/:userId", async (req, res) => {
       res.status(500).json({ message: (error as Error).message });
   }
 });
-/*
+
 // Delete user palettes
 router.delete("/palettes/user/:userId", async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    console.log("Deleting palettes for userId:", userId); // Debug log
+    console.log("Deleting palettes for userId:", userId); // DEBUG
 
     const deleted = await PaletteModel.deleteMany({ userId });
 
     if (deleted.deletedCount === 0) {
-      return res.status(404).json({ message: "No palettes found for this user." });
+      res.status(404).json({ message: "No palettes found for this user." });
+      console.log("No palettes found for this user."); // DEBUG
     }
-
-    res.status(200).json({ message: "User palettes deleted successfully." });
+    else {
+      res.status(200).json({ message: "User palettes deleted successfully." });
+      console.log( "User palettes deleted successfully."); // DEBUG
+    }
   } catch (error) {
     console.error("Error deleting palettes:", error);
     res.status(500).json({ message: "Error deleting palettes", error });
   }
 });
-*/
+
 // Generate a palette
 router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
