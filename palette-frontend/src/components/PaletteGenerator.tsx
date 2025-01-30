@@ -42,7 +42,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   };
 
   return (
-    <Card style={{ width: "66%", padding: "10px" }}>
+    <Card style={{ width: "66%", padding: "10px", minHeight: "600px" }}>
       <CardContent>
         <Typography variant="h3" fontWeight="bold" align="center">
           Color Palette Generator
@@ -118,19 +118,17 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         {/* Error message */}
         {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
 
-        {/* Loading spinner */}
-        {loading && (
+        {/* If loading spinner is going the is shown instead of generated palette */}
+        {loading ? ( 
           <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
             <CircularLoader />
           </div>
-        )}
-
-        {/* Show generated palette */}
-        {palette && (
-          <div style={{ marginTop: '20px' }}>
-            <PaletteDisplay palette={palette} />
+        ) : ( 
+          <div style={{ marginTop: '20px', minHeight: '150px' }}>
+            {palette && <PaletteDisplay palette={palette} />}
           </div>
         )}
+        
       </CardContent>
     </Card>
   );
