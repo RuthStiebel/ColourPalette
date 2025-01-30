@@ -5,11 +5,6 @@ body {
   transition: background-color 0.3s ease-in-out; /* Smooth transition */
 }
 
-/* Dynamically set background color */
-body.dynamic-bg {
-  background-color: var(--selected-color, #ffffff); /* Default to white */
-}
-
 /* Container */
 .container {
   max-width: 900px;

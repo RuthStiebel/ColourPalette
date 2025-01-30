@@ -35,8 +35,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {
     setSelectedColor(color.hex);
-    document.body.style.setProperty("--selected-color", color.hex);
-    document.body.classList.add("dynamic-bg"); // Apply background color
+    document.body.style.backgroundColor = `${color.hex}30`; // Adding '99' makes it ~60% transparent in hex
     console.log("Selected Color:", color.hex);
   };
   
