@@ -49,7 +49,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               >
                 <CardContent>
-                <Typography variant="h6" fontWeight="normal">
+                <Typography color="textSecondary" fontWeight="normal" align="center" style={{ marginBottom: "8px" }}>
                   {palette.paletteId.split("\n")[0]}
                 </Typography>
 
