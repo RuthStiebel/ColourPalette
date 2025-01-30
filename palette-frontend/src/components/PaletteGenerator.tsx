@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, CardContent, Typography, Stack, TextField } from '@mui/material';
 import CircularLoader from './CircularLoader';
 import { MAX_NUM_COLORS } from "../utils/globals";
 import PaletteDisplay from './PaletteDisplay';
-import  Wheel from '@uiw/react-color-wheel';
+import Wheel from '@uiw/react-color-wheel';
 
 interface PaletteGeneratorProps {
   generatePalette: () => void;
@@ -30,17 +30,18 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   setSelectedColor,
   palette,
 }) => {
+  const [hovered, setHovered] = useState(false); // State to track hover
 
   // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {
-    setSelectedColor(color.hex); // Update the selected color when changed
-    console.log("Selected Color:", color.hex);  // Log the selected color
+    setSelectedColor(color.hex);
+    console.log("Selected Color:", color.hex);
   };
 
   // Handle random color generation
   const handleRandomColor = () => {
-    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-    setSelectedColor(randomColor);  // Set random color as the selected color
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    setSelectedColor(randomColor);
     console.log("Random Color:", randomColor);
   };
 
@@ -52,7 +53,16 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         </Typography>
 
         {/* Color Wheel */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px", marginTop: "40px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+            marginTop: "40px",
+            opacity: keywords ? 0.4 : 1, // Fade when keywords are entered
+            transition: "opacity 0.3s ease-in-out",
+          }}
+        >
           <Wheel
             color={selectedColor}
             onChange={handleColorChange}
@@ -75,17 +85,48 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
             />
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div
+            style={{
+              flex: 1,
+              position: "relative",
+              opacity: keywords ? 0.4 : 1, // Fade when keywords are entered
+              transition: "opacity 0.3s ease-in-out",
+            }}
+          >
             {/* Selected color rectangle */}
             <div
               style={{
                 width: "100%",
-                height: "56px", // Same height as the input box
+                height: "56px",
                 backgroundColor: selectedColor,
-                borderRadius: "4px", // Border radius for consistency
-                border: "1px solid #ccc", // Border for consistency
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                position: "relative",
               }}
-            />
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+            >
+              {/* Show HEX code on hover */}
+              {hovered && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "-25px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    backgroundColor: "black",
+                    color: "white",
+                    padding: "5px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {selectedColor}
+                </div>
+              )}
+            </div>
           </div>
 
           <div style={{ flex: 1 }}>
@@ -93,7 +134,6 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
             <Button variant="contained" onClick={handleRandomColor} fullWidth>
               Random
             </Button>
-
           </div>
         </Stack>
 
@@ -121,17 +161,16 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         {/* Error message */}
         {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
 
-        {/* If loading spinner is going the is shown instead of generated palette */}
-        {loading ? ( 
+        {/* If loading spinner is going, it is shown instead of generated palette */}
+        {loading ? (
           <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
             <CircularLoader />
           </div>
-        ) : ( 
+        ) : (
           <div style={{ marginTop: '20px', minHeight: '150px' }}>
             {palette && <PaletteDisplay palette={palette} />}
           </div>
         )}
-        
       </CardContent>
     </Card>
   );
