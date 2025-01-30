@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleDailyLimit = void 0;
 const paletteModels_1 = require("../models/paletteModels");
-const DAILY_LIMIT = 100; // Set your daily limit
+const DAILY_LIMIT = 200; // Set your daily limit
 const isNewDay = (lastReset) => {
     const now = new Date();
     const last = new Date(lastReset);
