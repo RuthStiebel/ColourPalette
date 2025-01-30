@@ -14,7 +14,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
   clearHistory,
 }) => {
   return (
-    <Card style={{ width: "33%", height: "80vh", overflowY: "auto", padding: "10px" }}>
+    <Card style={{ width: "33%", height: "95vh", overflowY: "auto", padding: "10px" }}>
       <CardContent>
         {/* User History Header with Clear Button */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
