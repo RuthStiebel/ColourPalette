@@ -3,7 +3,8 @@ import { Button, Card, CardContent, Typography } from '@mui/material';
 import CircularLoader from './CircularLoader'; 
 import { MAX_NUM_COLORS } from "../utils/globals"; 
 import PaletteDisplay from './PaletteDisplay'; 
-import ColorWheel from './ColorWheel'; 
+import Wheel from '@uiw/react-color-wheel';
+//import ShadeSlider from '@uiw/react-color-shade-slider';
 
 interface PaletteGeneratorProps {
   generatePalette: () => void;
@@ -26,6 +27,14 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   setNumColors,
   palette,
 }) => {
+  const [selectedColor, setSelectedColor] = React.useState<string>('#FFFFFF');
+  
+  // Handle color change from Wheel and ShadeSlider
+  const handleColorChange = (color: { hex: string }) => {
+    setSelectedColor(color.hex);
+    console.log("Selected Color:", color.hex);  // You can send this color to your palette generation logic
+  };
+
   return (
     <Card style={{ width: "66%", padding: "10px" }}>
       <CardContent>
@@ -33,8 +42,16 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
           Color Palette Generator
         </Typography>
 
-        { /* Color Wheel */}
-        <ColorWheel onColorSelect={(color) => console.log("Selected Color:", color)}  />
+        {/* Color Wheel */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+          <Wheel
+            color={selectedColor}
+            onChange={handleColorChange}
+            style={{ width: "300px", height: "300px" }}
+          />
+        </div>
+
+        {/* Shade Slider */}
 
         {/* Form for keywords and number of colors */}
         <input
