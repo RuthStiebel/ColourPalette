@@ -1,9 +1,9 @@
-// PaletteGenerator.tsx
 import React from 'react';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import CircularLoader from './CircularLoader'; 
 import { MAX_NUM_COLORS } from "../utils/globals"; 
 import PaletteDisplay from './PaletteDisplay'; 
+import ColorWheel from './ColorWheel'; 
 
 interface PaletteGeneratorProps {
   generatePalette: () => void;
@@ -29,9 +29,12 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   return (
     <Card style={{ width: "66%", padding: "10px" }}>
       <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Generate Color Palette
+        <Typography variant="h3" fontWeight="bold" align="center">
+          Color Palette Generator
         </Typography>
+
+        { /* Color Wheel */}
+        <ColorWheel onColorSelect={(color) => console.log("Selected Color:", color)}  />
 
         {/* Form for keywords and number of colors */}
         <input
