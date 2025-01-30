@@ -57,8 +57,8 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
           />
         </div>
 
-        {/* First row layout: Color count, Selected Color, and Generate button */}
-        <Stack direction="row" spacing={2} style={{ width: '100%' }}>
+        {/* First row layout: Color count, Selected Color, and Random button */}
+        <Stack direction="row" spacing={2} alignItems="center" style={{ width: '100%' }}>
           <div style={{ flex: 1 }}>
             {/* Number of Colors input */}
             <TextField
@@ -94,7 +94,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
           </div>
         </Stack>
 
-        {/* Second row layout: Keywords and Random button */}
+        {/* Second row layout: Keywords and Generate button */}
         <Stack direction="row" spacing={2} alignItems="center" style={{ marginTop: "20px", width: '100%' }}>
           <div style={{ flex: 3 }}>
             {/* Keywords input box */}
