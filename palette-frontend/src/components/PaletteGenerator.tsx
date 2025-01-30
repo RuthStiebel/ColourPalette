@@ -1,43 +1,74 @@
-import React, { useState } from "react";
-import { Button, TextField } from "@mui/material";
-import { MAX_NUM_COLORS } from ".././utils/globals";
+// PaletteGenerator.tsx
+import React from 'react';
+import { Button, Card, CardContent, Typography } from '@mui/material';
+import CircularLoader from './CircularLoader'; 
+import { MAX_NUM_COLORS } from "../utils/globals"; 
+import PaletteDisplay from './PaletteDisplay'; 
 
 interface PaletteGeneratorProps {
+  generatePalette: () => void;
+  loading: boolean;
+  errorMessage: string | null;
   keywords: string;
   setKeywords: React.Dispatch<React.SetStateAction<string>>;
   numColors: number;
   setNumColors: React.Dispatch<React.SetStateAction<number>>;
-  generatePalette: (keywords: string, numColors: number) => Promise<void>;
-  loading: boolean;
-  errorMessage: string | null;
+  palette: any; 
 }
 
-
-const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({ generatePalette }) => {
-  const [keywords, setKeywords] = useState<string>("");
-  const [numColors, setNumColors] = useState<number>(5);
-
+const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
+  generatePalette,
+  loading,
+  errorMessage,
+  keywords,
+  setKeywords,
+  numColors,
+  setNumColors,
+  palette,
+}) => {
   return (
-    <div>
-      <h1>Generate Color Palette</h1>
-      <TextField
-        label="Keywords"
-        variant="outlined"
-        fullWidth
-        value={keywords}
-        onChange={(e) => setKeywords(e.target.value)}
-      />
-      <TextField
-        label="Number of Colors"
-        type="number"
-        inputProps={{ min: 1, max: MAX_NUM_COLORS }}
-        value={numColors}
-        onChange={(e) => setNumColors(Number(e.target.value))}
-      />
-      <Button variant="contained" onClick={() => generatePalette(keywords, numColors)}>
-        Generate Palette
-      </Button>
-    </div>
+    <Card style={{ width: "66%", padding: "10px" }}>
+      <CardContent>
+        <Typography variant="h5" gutterBottom>
+          Generate Color Palette
+        </Typography>
+
+        {/* Form for keywords and number of colors */}
+        <input
+          type="text"
+          placeholder="Keywords"
+          value={keywords}
+          onChange={(e) => setKeywords(e.target.value)}
+        />
+        <input
+          type="number"
+          min="1"
+          max={MAX_NUM_COLORS}
+          value={numColors}
+          onChange={(e) => setNumColors(Number(e.target.value))}
+        />
+        <Button variant="contained" onClick={generatePalette}>
+          Generate
+        </Button>
+
+        {/* Error message */}
+        {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
+
+        {/* Loading spinner */}
+        {loading && (
+          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+            <CircularLoader />
+          </div>
+        )}
+
+        {/* Show generated palette */}
+        {palette && (
+          <div style={{ marginTop: '20px' }}>
+            <PaletteDisplay palette={palette} />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
