@@ -12,7 +12,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
   if (!palette) return null;
 
   return (
-    <Card style={{ marginTop: "20px" }}>
+    <Card style={{ marginTop: "10px" }}>
       <CardContent>
         <Typography variant="h6" style={{ marginBottom: '10px' }}>
           {palette.paletteId}

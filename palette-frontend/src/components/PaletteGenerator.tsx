@@ -42,7 +42,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   };
 
   return (
-    <Card style={{ width: "66%", padding: "10px", minHeight: "600px" }}>
+    <Card style={{ width: "66%", paddingTop: "10px", minHeight: "600px" }}>
       <CardContent>
         <Typography variant="h3" fontWeight="bold" align="center">
           Color Palette Generator
