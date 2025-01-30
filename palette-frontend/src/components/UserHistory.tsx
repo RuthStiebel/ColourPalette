@@ -1,74 +1,96 @@
 import React from "react";
 import { Card, CardContent, Stack, Typography, Button } from "@mui/material";
 import { Palette } from "../../../palette-backend/src/models/paletteModels";
-import PaletteDisplay from "./PaletteDisplay";
 
 interface PaletteHistoryProps {
   userPalettes: Palette[];
   onSelectPalette: (palette: Palette) => void;
-  clearHistory: () => void;  // Function to clear history
+  clearHistory: () => void;
 }
 
-const PaletteHistory: React.FC<PaletteHistoryProps> = ({ userPalettes, onSelectPalette, clearHistory }) => {
+const PaletteHistory: React.FC<PaletteHistoryProps> = ({
+  userPalettes,
+  onSelectPalette,
+  clearHistory,
+}) => {
   return (
-    <div style={{ width: "30%", paddingRight: "20px", borderRight: "1px solid #ccc" }}>
-      <div style={{marginBottom: "10px"}}>
-      <h2>User History</h2>
-      <Button variant="contained" color="error" fullWidth onClick={clearHistory}>
-        Clear History
-      </Button>
-      </div>
+    <Card style={{ width: "33%", height: "80vh", overflowY: "auto", padding: "10px" }}>
+      <CardContent>
+        {/* User History Header with Clear Button */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+          <Typography variant="h5" fontWeight="bold">
+            User History
+          </Typography>
+          <Button variant="contained" color="error" onClick={clearHistory}>
+            Clear History
+          </Button>
+        </div>
+
       <Stack spacing={2}>
         {userPalettes.length === 0 ? (
-          <Typography color="textSecondary">No palettes saved yet.</Typography>
+          <Typography color="textSecondary" align="center">
+            No palettes saved yet.
+          </Typography>
         ) : (
-          userPalettes.slice().reverse().map((palette) => (
-            <Card key={palette.paletteId} onClick={() => onSelectPalette(palette)}>
-              <CardContent>
-                <Typography variant="h6">{palette.paletteId}</Typography>
-                <Stack direction="row" spacing={0}>
-                  {palette.colors.map((color, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        width: "50px",
-                        height: "20px",
-                        backgroundColor: `rgb(${color.rgb.join(",")})`,
-                      }}
-                    />
-                  ))}
-                </Stack>
-                <Stack spacing={0}>
-                  {palette.shades.map((shadesRow, rowIndex) => (
-                    <Stack key={rowIndex} direction="row" spacing={0}>
-                      {shadesRow.map((shade, shadeIndex) => (
-                        <div
-                          key={shadeIndex}
-                          style={{
-                            width: "50px",
-                            height: "20px",
-                            backgroundColor: `rgb(${shade.rgb.join(",")})`,
-                          }}
-                        />
-                      ))}
-                    </Stack>
-                  ))}
-                </Stack>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={() =>  {palette && <PaletteDisplay palette={palette} />}}
-                  style={{ marginTop: "10px" }}
-                >
-                  Show Palette
-                </Button>
-              </CardContent>
-            </Card>
-          ))
+          userPalettes
+            .slice()
+            .reverse()
+            .map((palette) => (
+              <Card
+                key={palette.paletteId}
+                onClick={() => onSelectPalette(palette)}
+                style={{
+                  cursor: "pointer",
+                  borderRadius: "10px",
+                  transition: "transform 0.2s ease-in-out",
+                  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.15)",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              >
+                <CardContent>
+                <Typography variant="h6" fontWeight="normal">
+                  {palette.paletteId.split("\n")[0]}
+                </Typography>
+
+                  <Stack direction="row" spacing={1} justifyContent="center">
+                    {palette.colors.map((color, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          width: "45px",
+                          height: "20px",
+                          backgroundColor: `rgb(${color.rgb.join(",")})`,
+                          borderRadius: "6px",
+                        }}
+                      />
+                    ))}
+                  </Stack>
+
+                  <Stack spacing={1} alignItems="center" style={{ marginTop: "8px" }}>
+                    {palette.shades.map((shadesRow, rowIndex) => (
+                      <Stack key={rowIndex} direction="row" spacing={1}>
+                        {shadesRow.map((shade, shadeIndex) => (
+                          <div
+                            key={shadeIndex}
+                            style={{
+                              width: "30px",
+                              height: "20px",
+                              backgroundColor: `rgb(${shade.rgb.join(",")})`,
+                              borderRadius: "4px",
+                            }}
+                          />
+                        ))}
+                      </Stack>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </Card>
+            ))
         )}
       </Stack>
-      
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
