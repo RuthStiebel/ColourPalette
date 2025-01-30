@@ -1,20 +1,9 @@
 import React from 'react';
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import CircularLoader from './CircularLoader'; 
-import { MAX_NUM_COLORS } from "../utils/globals"; 
-import PaletteDisplay from './PaletteDisplay'; 
-import Wheel from '@uiw/react-color-wheel';
-
-//import ShadeSlider from '@uiw/react-color-shade-slider';
-/*
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-          <ShadeSlider
-            value={selectedColor}
-            onChange={handleColorChange}
-            style={{ width: "300px" }}
-          />
-        </div>
-*/
+import { Button, Card, CardContent, Typography, Stack, TextField } from '@mui/material';
+import CircularLoader from './CircularLoader';
+import { MAX_NUM_COLORS } from "../utils/globals";
+import PaletteDisplay from './PaletteDisplay';
+import  Wheel from '@uiw/react-color-wheel';
 
 interface PaletteGeneratorProps {
   generatePalette: () => void;
@@ -24,7 +13,7 @@ interface PaletteGeneratorProps {
   setKeywords: React.Dispatch<React.SetStateAction<string>>;
   numColors: number;
   setNumColors: React.Dispatch<React.SetStateAction<number>>;
-  palette: any; 
+  palette: any;
 }
 
 const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
@@ -37,12 +26,19 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   setNumColors,
   palette,
 }) => {
-  const [selectedColor, setSelectedColor] = React.useState<string>('#FFFFFF');
-  
-  // Handle color change from Wheel and ShadeSlider
+  const [selectedColor, setSelectedColor] = React.useState<string>('#FFFFFF'); // Store the selected color
+
+  // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {
-    setSelectedColor(color.hex);
-    console.log("Selected Color:", color.hex);  // You can send this color to your palette generation logic
+    setSelectedColor(color.hex); // Update the selected color when changed
+    console.log("Selected Color:", color.hex);  // Log the selected color
+  };
+
+  // Handle random color generation
+  const handleRandomColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setSelectedColor(randomColor);  // Set random color as the selected color
+    console.log("Random Color:", randomColor);
   };
 
   return (
@@ -53,40 +49,71 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         </Typography>
 
         {/* Color Wheel */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", marginBottom: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px", marginTop: "40px" }}>
           <Wheel
             color={selectedColor}
             onChange={handleColorChange}
-            style={{
-              width: "300px",
-              height: "300px",
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
-            }}
-            className="custom-wheel"
+            style={{ width: "300px", height: "300px" }}
           />
         </div>
 
-        {/* Shade Slider */}
+        {/* First row layout: Color count, Selected Color, and Generate button */}
+        <Stack direction="row" spacing={2} style={{ width: '100%' }}>
+          <div style={{ flex: 1 }}>
+            {/* Number of Colors input */}
+            <TextField
+              type="number"
+              label="Number of Colors"
+              variant="outlined"
+              value={numColors}
+              onChange={(e) => setNumColors(Number(e.target.value))}
+              inputProps={{ min: 1, max: MAX_NUM_COLORS }}
+              fullWidth
+            />
+          </div>
 
-        {/* Form for keywords and number of colors */}
-        <input
-          type="text"
-          placeholder="Keywords"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-        />
-        <input
-          type="number"
-          min="1"
-          max={MAX_NUM_COLORS}
-          value={numColors}
-          onChange={(e) => setNumColors(Number(e.target.value))}
-        />
-        <Button variant="contained" onClick={generatePalette}>
-          Generate
-        </Button>
+          <div style={{ flex: 1 }}>
+            {/* Selected color rectangle */}
+            <div
+              style={{
+                width: "100%",
+                height: "56px", // Same height as the input box
+                backgroundColor: selectedColor,
+                borderRadius: "4px", // Border radius for consistency
+                border: "1px solid #ccc", // Border for consistency
+              }}
+            />
+          </div>
+
+          <div style={{ flex: 1 }}>
+            {/* Random Button */}
+            <Button variant="contained" onClick={handleRandomColor} fullWidth>
+              Random
+            </Button>
+
+          </div>
+        </Stack>
+
+        {/* Second row layout: Keywords and Random button */}
+        <Stack direction="row" spacing={2} alignItems="center" style={{ marginTop: "20px", width: '100%' }}>
+          <div style={{ flex: 3 }}>
+            {/* Keywords input box */}
+            <TextField
+              label="Keywords"
+              variant="outlined"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              fullWidth
+            />
+          </div>
+
+          <div style={{ flex: 1 }}>
+            {/* Generate Button */}
+            <Button variant="contained" onClick={generatePalette} fullWidth>
+              Generate
+            </Button>
+          </div>
+        </Stack>
 
         {/* Error message */}
         {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
