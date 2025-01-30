@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { PaletteModel } from "../models/paletteModels";
 import { handleDailyLimit } from "../utils/functionUtils";
 import { validateNumColors, validateAndCleanKeywords, generateColors, 
-  callOpenAI, generateShadesAndTints } from "../utils/colorUtils";
+  generateShadesAndTints } from "../utils/colorUtils";
 
 const router = express.Router();
 
@@ -61,7 +61,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     
     try {
-      const { keywords, numColors, userId } = req.body;
+      const { keywords, numColors, selectedColor, userId } = req.body;
       
       // Check the user's daily limit
       const limitStatus = await handleDailyLimit(userId);
@@ -78,10 +78,10 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         
         let generatedColors;
         if (cleanKeywords == null) {
-          generatedColors = await generateColors(numColors);
+          generatedColors = await generateColors([], numColors, selectedColor);
         }
         else {
-          generatedColors = await callOpenAI(cleanKeywords, numColors);
+          generatedColors = await generateColors(cleanKeywords, numColors, '');
         }
   
         // Create a new palette

@@ -13,6 +13,8 @@ interface PaletteGeneratorProps {
   setKeywords: React.Dispatch<React.SetStateAction<string>>;
   numColors: number;
   setNumColors: React.Dispatch<React.SetStateAction<number>>;
+  selectedColor: string;
+  setSelectedColor: React.Dispatch<React.SetStateAction<any>>;
   palette: any;
 }
 
@@ -24,9 +26,10 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   setKeywords,
   numColors,
   setNumColors,
+  selectedColor,
+  setSelectedColor,
   palette,
 }) => {
-  const [selectedColor, setSelectedColor] = React.useState<string>('#FFFFFF'); // Store the selected color
 
   // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {

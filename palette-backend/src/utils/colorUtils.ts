@@ -25,7 +25,7 @@ export function validateAndCleanKeywords(keywords: any): string[] | null {
 }
 
 // Generate random colors if no keywords are provided
-export function generateColors(num: number): Color[] {
+export function generateRandomColors(num: number): Color[] {
   const colors: { rgb: [number, number, number]; hex: string }[] = [];
   for (let i = 0; i < num; i++) {
     // Generate a random hex color
@@ -84,20 +84,23 @@ export function parseHexColors(content: string, numColors: number): Color[] {
   }));
 }
 // Call OpenAI to generate colors based on keywords
-export async function callOpenAI(cleanKeywords: string[], numColors: number): Promise<Color[]> {
+export async function generateColors(cleanKeywords: string[], numColors: number, selectedColor: string): Promise<Color[]> {
   try {
     const client = await getOpenAIClient(); // Get the OpenAI client instance
-
-     // Generate a prompt for OpenAI
-    const prompt = `Generate a harmonious color palette with ${numColors} colors. 
-    Keywords: ${cleanKeywords ? cleanKeywords.join(", ") : "none"}. 
-    Use principles of color theory to ensure the palette is cohesive 
+    
+    // Generate a prompt for OpenAI
+    let prompt = `Generate a harmonious color palette with ${numColors} colors.`;
+     if (cleanKeywords.length == 0) {
+        prompt += ` With ${selectedColor} as the main color.`;
+    }
+    else {
+        prompt += ` Keywords: ${cleanKeywords.join(", ")}.`;
+    }
+    prompt += `Use principles of color theory to ensure the palette is cohesive 
     (e.g., complementary, analogous, triadic, or monochromatic schemes). 
     Provide the colors in hex format along with descriptive names. 
     For example, you could use the following keywords: "ocean, sky, forest" to generate a nature-inspired palette. 
     The colors should be visually appealing and suitable for use in a web design project.`;
-
-    
 
     // Fetch response from OpenAI API
     console.log("Prompt" + prompt); //DEBUG
@@ -106,7 +109,6 @@ export async function callOpenAI(cleanKeywords: string[], numColors: number): Pr
       messages: [{ role: "user", content: prompt }],
       max_tokens: 100,
     });
-
 
     console.log("API response" + response); //DEBUG
     const content = response.choices[0]?.message?.content;

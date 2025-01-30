@@ -9,6 +9,7 @@ import { MAX_NUM_COLORS } from "./utils/globals";
 const App: React.FC = () => {
   const [keywords, setKeywords] = useState<string>("");
   const [numColors, setNumColors] = useState<number>(5);
+  const [selectedColor, setSelectedColor] = useState<string>('#FFFFFF'); // Store the selected color
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
@@ -67,11 +68,12 @@ const App: React.FC = () => {
     // Clear any previous error message
     setErrorMessage(null);
     setLoading(true);
-
+    
     const requestData = {
       keywords: keywords,
       numColors,
       userId: userId,
+      selectedColor: selectedColor,
     };
 
     try {
@@ -161,6 +163,8 @@ const App: React.FC = () => {
           setKeywords={setKeywords}
           numColors={numColors}
           setNumColors={setNumColors}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
           palette={palette}
         />
       </Stack>
