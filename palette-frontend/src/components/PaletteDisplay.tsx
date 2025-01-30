@@ -15,14 +15,14 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
     <Card style={{ marginTop: "20px" }}>
       <CardContent>
         <Typography variant="h5">{palette.paletteId}</Typography>
-        
+
         {/* Colors Display */}
-        <Stack direction="row" spacing={0}>
-        {palette.colors.map((color, index) => (
+        <Stack direction="row" spacing={0} style={{ width: "100%" }}>
+          {palette.colors.map((color, index) => (
             <div
               key={index}
               style={{
-                width: "50px",
+                flexGrow: 1,  // Each color will take up equal space in the row
                 height: "50px",
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 position: "relative",
@@ -55,12 +55,12 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
         </Stack>
 
         {/* Shades Display */}
-        <Stack direction="row" spacing={0}> {/* Single row Stack */}
+        <Stack direction="row" spacing={0} style={{ width: "100%" }}> {/* Single row Stack */}
           {palette.shades[0].map((shade, shadeIndex) => ( // Iterate over the first row of shades
             <React.Fragment key={shadeIndex}> {/* Use Fragment to group elements */}
               <div
                 style={{
-                  width: "25px",
+                  flexGrow: 1,  // Each shade will take up equal space
                   height: "20px",
                   backgroundColor: `rgb(${shade.rgb.join(",")})`,
                   cursor: "pointer",
@@ -68,8 +68,8 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                 }}
                 onMouseEnter={() => setHoveredColor(shade.hex)}
                 onMouseLeave={() => setHoveredColor(null)}
-              >              
-              {/* Show HEX Code on Hover */}
+              >
+                {/* Show HEX Code on Hover */}
                 {hoveredColor === shade.hex && (
                   <div
                     style={{
@@ -92,17 +92,17 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
               {/* Render the corresponding shade from the second row */}
               <div
                 style={{
-                  width: "25px",
+                  flexGrow: 1,  // Each shade will take up equal space
                   height: "20px",
-                  backgroundColor: `rgb(${palette.shades[1][shadeIndex].rgb.join(",")})`, // Access second row
+                  backgroundColor: `rgb(${palette.shades[1][shadeIndex].rgb.join(",")})`, // Access second row of shades
                   cursor: "pointer",
                   position: "relative",
                 }}
-                onMouseEnter={() => setHoveredColor(palette.shades[1][shadeIndex].hex)} // Correct hover
+                onMouseEnter={() => setHoveredColor(palette.shades[1][shadeIndex].hex)}
                 onMouseLeave={() => setHoveredColor(null)}
               >
                 {/* Show HEX Code on Hover */}
-                {hoveredColor === palette.shades[1][shadeIndex].hex && ( // Correct hover
+                {hoveredColor === palette.shades[1][shadeIndex].hex && (
                   <div
                     style={{
                       position: "absolute",
