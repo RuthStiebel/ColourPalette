@@ -35,9 +35,11 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {
     setSelectedColor(color.hex);
+    document.body.style.setProperty("--selected-color", color.hex);
+    document.body.classList.add("dynamic-bg"); // Apply background color
     console.log("Selected Color:", color.hex);
   };
-
+  
   // Handle random color generation
   const handleRandomColor = () => {
     const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
