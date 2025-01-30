@@ -1,6 +1,6 @@
 /* Center the entire application */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.6;
 }
 
@@ -16,54 +16,73 @@ body {
 }
 
 .header h1 {
-  font-size: 2rem;
+  font-size: 2.2rem;
+  font-weight: bold;
   color: #287684;
 }
 
+/* Input Group */
 .input-group {
   margin-bottom: 15px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
 }
 
 .input-group input {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 200px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  width: 220px;
+  transition: all 0.3s ease-in-out;
 }
 
+.input-group input:focus {
+  border-color: #287684;
+  box-shadow: 0 0 6px rgba(40, 118, 132, 0.3);
+}
+
+/* Button Styling */
 .button {
-  padding: 10px 20px;
-  background-color: #feed8b; /* Bright yellow for button */
+  padding: 12px 24px;
+  background: linear-gradient(to right, #feed8b, #fdbb2d);
   color: #3b3b3b;
+  font-weight: bold;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .button:hover {
-  background-color: #287684; /* Deep teal for hover */
+  background: linear-gradient(to right, #287684, #004466);
   color: #fff;
+  transform: scale(1.05);
 }
 
+/* Palette Display */
 .palette {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin: 20px 0;
   justify-content: center;
 }
 
 .palette-square {
-  width: 60px;
-  height: 60px;
-  border-radius: 4px;
+  width: 70px;
+  height: 70px;
+  border-radius: 6px;
   border: 1px solid #ddd;
+  transition: transform 0.3s ease-in-out;
 }
 
+.palette-square:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* History Section */
 .history {
   list-style: none;
   padding: 0;
@@ -71,10 +90,15 @@ body {
 }
 
 .history li {
-  background: #f4f9f9; /* Light teal for history entries */
-  padding: 10px;
-  margin: 5px 0;
+  background: #f4f9f9;
+  padding: 12px;
+  margin: 6px 0;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 6px;
   color: #3b3b3b;
+  transition: background 0.3s ease-in-out;
+}
+
+.history li:hover {
+  background: #d9ecec;
 }

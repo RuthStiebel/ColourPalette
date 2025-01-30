@@ -5,16 +5,17 @@
 }
 
 body {
-  font-family: "Arial", sans-serif;
-  background-color: #f0f0f0; /* Slightly lighter cream for more contrast */
-  color: #333; /* Darker text for better readability */
+  font-family: "Poppins", sans-serif;
+  background-color: #f9fafb; /* Lighter gray background for a softer look */
+  color: #333;
   line-height: 1.6;
-  padding: 20px; /* Added some padding around the body */
+  padding: 20px;
 }
 
 h1, h2, h3 {
-  color: #336699; /* Deeper blue for headings */
-  margin-bottom: 15px; /* Increased margin */
+  color: #003366; /* Darker, professional blue */
+  margin-bottom: 15px;
+  font-weight: 600;
 }
 
 ul {
@@ -24,70 +25,90 @@ ul {
 
 a {
   text-decoration: none;
-  color: #007bff; /* Standard blue link color */
+  color: #007bff;
+  transition: color 0.3s ease-in-out;
 }
 
 a:hover {
-  text-decoration: underline; /* Underline on hover for better UX */
+  text-decoration: underline;
+  color: #0056b3;
 }
 
+/* Input Styling */
 input {
-  padding: 10px; /* Slightly larger padding */
-  font-size: 16px; /* Slightly larger font size */
-  border: 1px solid #ccc; /* Slightly darker border */
-  border-radius: 5px;
-  background-color: #fff; /* White background for input */
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
   color: #333;
-  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); /* Subtle inset shadow */
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05);
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 input:focus {
   outline: none;
-  border-color: #007bff; /* Blue focus border */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* Subtle outer shadow on focus */
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
+/* Button Styling */
 button {
-  padding: 10px 20px; /* Slightly larger padding */
-  background-color: #002c5c; 
-  color: #fff; /* White text on button */
+  padding: 12px 24px;
+  background: linear-gradient(to right, #004080, #007bff);
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease; /* Smooth transition for hover */
+  transition: all 0.3s ease-in-out;
 }
 
 button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background: linear-gradient(to right, #002b5c, #0056b3);
+  transform: scale(1.05);
 }
 
+/* Palette Display */
 .palette {
   display: flex;
-  gap: 20px; /* Increased gap */
-  margin: 30px 0; /* Increased margin */
+  gap: 15px;
+  margin: 30px 0;
+  justify-content: center;
 }
 
 .palette-square {
-  width: 60px; /* Slightly larger squares */
-  height: 60px;
-  border-radius: 5px;
-  border: 1px solid #bbb; /* Slightly darker border */
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out;
 }
 
+.palette-square:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* History Section */
 .history {
-  background: #fff; /* White background for history */
-  padding: 15px; /* Increased padding */
-  border-radius: 5px;
-  margin-top: 30px; /* Increased margin */
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .history li {
-  margin-bottom: 8px; /* Increased margin */
-  padding: 8px; /* Increased padding */
-  border-radius: 5px;
-  background: #f8f9fa; /* Very light gray background */
-  border: 1px solid #eee;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.history li:hover {
+  background: #e3e8ef;
 }
