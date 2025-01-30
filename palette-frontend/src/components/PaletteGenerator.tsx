@@ -4,7 +4,17 @@ import CircularLoader from './CircularLoader';
 import { MAX_NUM_COLORS } from "../utils/globals"; 
 import PaletteDisplay from './PaletteDisplay'; 
 import Wheel from '@uiw/react-color-wheel';
+
 //import ShadeSlider from '@uiw/react-color-shade-slider';
+/*
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+          <ShadeSlider
+            value={selectedColor}
+            onChange={handleColorChange}
+            style={{ width: "300px" }}
+          />
+        </div>
+*/
 
 interface PaletteGeneratorProps {
   generatePalette: () => void;
@@ -43,11 +53,18 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         </Typography>
 
         {/* Color Wheel */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", marginBottom: "20px" }}>
           <Wheel
             color={selectedColor}
             onChange={handleColorChange}
-            style={{ width: "300px", height: "300px" }}
+            style={{
+              width: "300px",
+              height: "300px",
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+            }}
+            className="custom-wheel"
           />
         </div>
 
