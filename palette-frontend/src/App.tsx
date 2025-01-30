@@ -16,8 +16,8 @@ const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
-  //const BACKEND_URL = "http://localhost:5000"; // Backend URL
-  const BACKEND_URL = "https://colourpalettebackend.onrender.com";
+  const BACKEND_URL = "http://localhost:5000"; // Backend URL
+ // const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
   useEffect(() => {
     // Check if a userId is already in local storage
