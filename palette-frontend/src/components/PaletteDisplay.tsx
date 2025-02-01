@@ -12,9 +12,9 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
   if (!palette) return null;
 
   return (
-    <Card style={{ marginTop: "10px" }}>
+    <Card style={{ marginTop: "10px", borderRadius: "12px"}}>
       <CardContent>
-        <Typography variant="h6" style={{ marginBottom: '10px' }}>
+        <Typography variant="h6" style={{ marginBottom: "10px" }}>
           {palette.paletteId}
         </Typography>
 
@@ -29,6 +29,9 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 position: "relative",
                 cursor: "pointer",
+                borderRadius: index === 0 ? "12px 0 0 0" : index === palette.colors.length - 1 ? "0 12px 0 0" : "0",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr", 
               }}
               onMouseEnter={() => setHoveredColor(color.hex)}
               onMouseLeave={() => setHoveredColor(null)}
@@ -62,11 +65,13 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
             <React.Fragment key={shadeIndex}> {/* Use Fragment to group elements */}
               <div
                 style={{
-                  flexGrow: 1,  // Each shade will take up equal space
+                  flexGrow: 1,  // Each shade will take up equal space in the row
                   height: "20px",
                   backgroundColor: `rgb(${shade.rgb.join(",")})`,
                   cursor: "pointer",
                   position: "relative",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr", // Splitting shades into two halves
                 }}
                 onMouseEnter={() => setHoveredColor(shade.hex)}
                 onMouseLeave={() => setHoveredColor(null)}
