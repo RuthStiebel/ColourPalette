@@ -29,7 +29,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 position: "relative",
                 cursor: "pointer",
-                borderRadius: index === 0 ? "12px 0 0 0" : index === palette.colors.length - 1 ? "0 12px 0 0" : "0",
+                borderRadius: index === 0 ? "10px 0 0 0" : index === palette.colors.length - 1 ? "0 10px 0 0" : "0",
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr", 
               }}
@@ -68,6 +68,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                   flexGrow: 1,  // Each shade will take up equal space in the row
                   height: "20px",
                   backgroundColor: `rgb(${shade.rgb.join(",")})`,
+                  borderRadius: shadeIndex === 0 ? "0 0 0 10px" : "0",
                   cursor: "pointer",
                   position: "relative",
                   display: "grid",
@@ -102,6 +103,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                   flexGrow: 1,  // Each shade will take up equal space
                   height: "20px",
                   backgroundColor: `rgb(${palette.shades[1][shadeIndex].rgb.join(",")})`, // Access second row of shades
+                  borderRadius: shadeIndex === palette.colors.length - 1 ? "0 0 10px 0" : "0",
                   cursor: "pointer",
                   position: "relative",
                 }}
