@@ -4,8 +4,6 @@ import CircularLoader from './CircularLoader';
 import { MAX_NUM_COLORS } from "../utils/globals";
 import PaletteDisplay from './PaletteDisplay';
 import Wheel from '@uiw/react-color-wheel';
-import ShadeSlider from '@uiw/react-color-shade-slider';
-import { hsvaToHex } from '@uiw/color-convert';
 
 interface PaletteGeneratorProps {
   generatePalette: () => void;
@@ -33,7 +31,6 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   palette,
 }) => {
   const [hovered, setHovered] = useState(false); // State to track hover
-  const [hsva, setHsva] = useState({ h: 214, s: 43, v: 90, a: 1 });
 
   // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {
