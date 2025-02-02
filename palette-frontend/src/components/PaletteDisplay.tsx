@@ -29,7 +29,13 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 position: "relative",
                 cursor: "pointer",
-                borderRadius: index === 0 ? "10px 0 0 0" : index === palette.colors.length - 1 ? "0 10px 0 0" : "0",
+                borderRadius: palette.colors.length === 1 
+                ? "10px 10px 0 0" // If only one color, round both edges
+                : index === 0 
+                  ? "10px 0 0 0"  // Round only the first color's left edge
+                  : index === palette.colors.length - 1 
+                    ? "0 10px 0 0" // Round only the last color's right edge
+                    : "0", // No rounding for middle colors
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr", 
               }}
