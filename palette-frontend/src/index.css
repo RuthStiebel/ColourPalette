@@ -6,14 +6,14 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background-color: #f9fafb; /* Lighter gray background for a softer look */
+  background-color: #f9fafb; 
   color: #333;
   line-height: 1.6;
   padding: 20px;
 }
 
 h1, h2, h3 {
-  color: #003366; /* Darker, professional blue */
+  color: #003366; 
   margin-bottom: 15px;
   font-weight: 600;
 }
@@ -26,7 +26,7 @@ ul {
 /* Button Styling */
 button {
   padding: 12px 24px;
-  background: (#007bff);
+  background: (#ffffff);
   color: #000000;
   border: none;
   border-radius: 8px;
@@ -36,7 +36,7 @@ button {
 }
 
 button:hover {
-  background: (#0056b3);
+  background: (#aedab1);
   transform: scale(1.05);
 }
 
