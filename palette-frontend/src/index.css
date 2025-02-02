@@ -23,15 +23,21 @@ ul {
   padding: 0;
 }
 
-a {
-  text-decoration: none;
-  color: #007bff;
-  transition: color 0.3s ease-in-out;
+/* Button Styling */
+button {
+  padding: 12px 24px;
+  background: (#007bff);
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
 }
 
-a:hover {
-  text-decoration: underline;
-  color: #0056b3;
+button:hover {
+  background: (#0056b3);
+  transform: scale(1.05);
 }
 
 /* Input Styling */
@@ -48,25 +54,6 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-}
-
-/* Button Styling */
-button {
-  padding: 12px 24px;
-  background: linear-gradient(to right, #004080, #007bff);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease-in-out;
-}
-
-button:hover {
-  background: linear-gradient(to right, #002b5c, #0056b3);
-  transform: scale(1.05);
 }
 
 /* Palette Display */
@@ -111,4 +98,14 @@ button:hover {
 
 .history li:hover {
   background: #e3e8ef;
+}
+
+/* Force Material-UI Buttons to use the correct color */
+.MuiButton-containedError {
+ /* background: linear-gradient(to right, #b71c1c, #d32f2f);*/
+  background-color: #d32f2f !important; /* MUI "error" red */
+}
+
+.MuiButton-containedError:hover {
+  background-color: #a41919 !important; /* Darker red on hover */
 }
