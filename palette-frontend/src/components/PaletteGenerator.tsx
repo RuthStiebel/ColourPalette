@@ -35,7 +35,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   // Handle color change from the Wheel component
   const handleColorChange = (color: { hex: string }) => {
     setSelectedColor(color.hex);
-    document.body.style.backgroundColor = `${color.hex}30`; // Adding '99' makes it ~60% transparent in hex
+    document.body.style.backgroundColor = `${color.hex}`; // Adding '30' to the end makes it 48% opacity
     console.log("Selected Color:", color.hex);
   };
   
@@ -80,6 +80,19 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
               onChange={(e) => setNumColors(Number(e.target.value))}
               inputProps={{ min: 1, max: MAX_NUM_COLORS }}
               fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: keywords? 'black' : selectedColor, 
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: 'black', // Change label color
+                },
+                "&.Mui-focused .MuiInputLabel-root": {
+                  color: 'black', // Change label color on focus
+                },
+              }}
             />
           </div>
 
@@ -129,7 +142,18 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 
           <div style={{ flex: 1 }}>
             {/* Random Button */}
-            <Button variant="outlined" onClick={handleRandomColor} fullWidth>
+              <Button
+              variant="outlined"
+              onClick={handleRandomColor}
+              fullWidth
+              sx={{
+                backgroundColor: "#ffffff", // White background
+                color:"#6c6c6c", 
+                borderColor: "#6c6c6c", 
+                "&:hover": {
+                  backgroundColor:"#f3f3f3", 
+                },
+              }}>
               Random
             </Button>
           </div>
@@ -145,12 +169,36 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
               fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: 'black',
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: 'black', // Change label color
+                },
+                "&.Mui-focused .MuiInputLabel-root": {
+                  color: 'black', // Change label color on focus
+                },
+              }}
             />
           </div>
 
           <div style={{ flex: 1 }}>
             {/* Generate Button */}
-            <Button variant="outlined" onClick={generatePalette} fullWidth>
+            <Button
+              variant="outlined"
+              onClick={generatePalette}
+              fullWidth
+              sx={{
+                backgroundColor: "#ffffff", // White background
+                color:"#6c6c6c", 
+                borderColor: "#6c6c6c", 
+                "&:hover": {
+                  backgroundColor:"#f3f3f3", 
+                },
+              }}>
               Generate
             </Button>
           </div>
