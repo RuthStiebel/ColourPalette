@@ -22,7 +22,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
           <Typography variant="h5" fontWeight="bold">
             User History
           </Typography>
-          <Button variant="outlined" color="error" onClick={clearHistory} startIcon={<DeleteIcon />} size = "small">
+          <Button variant="outlined" color="error" onClick={clearHistory} endIcon={<DeleteIcon />} size = "small">
             Clear History
           </Button>
         </div>
