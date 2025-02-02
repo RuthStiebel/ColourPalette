@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, Stack, Typography, Button } from "@mui/material";
 import { Palette } from "../../../palette-backend/src/models/paletteModels";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface PaletteHistoryProps {
   userPalettes: Palette[];
@@ -21,7 +22,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
           <Typography variant="h5" fontWeight="bold">
             User History
           </Typography>
-          <Button variant="contained" color="error" onClick={clearHistory}>
+          <Button variant="outlined" color="error" onClick={clearHistory} startIcon={<DeleteIcon />} size = "small">
             Clear History
           </Button>
         </div>
