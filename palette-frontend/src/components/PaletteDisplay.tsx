@@ -139,3 +139,5 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
 };
 
 export default PaletteDisplay;
+
+/* BUG - if a shadde is the exact same hex as another shade then when hovered both will appear over each color */
