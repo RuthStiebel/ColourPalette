@@ -14,7 +14,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
   return (
     <Card style={{ marginTop: "10px", borderRadius: "12px"}}>
       <CardContent>
-        <Typography variant="h6" style={{ marginBottom: "10px" }}>
+        <Typography variant="h6" style={{ marginBottom: "10px" }} fontWeight="bold">
           {palette.paletteId}
         </Typography>
 
