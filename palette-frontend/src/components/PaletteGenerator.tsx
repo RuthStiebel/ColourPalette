@@ -223,3 +223,4 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 };
 
 export default PaletteGenerator;
+//BUG - when the color picker is just loaded on white the the color number when selected is blue
