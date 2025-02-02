@@ -129,7 +129,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 
           <div style={{ flex: 1 }}>
             {/* Random Button */}
-            <Button variant="contained" onClick={handleRandomColor} fullWidth>
+            <Button variant="outlined" onClick={handleRandomColor} fullWidth>
               Random
             </Button>
           </div>
@@ -150,7 +150,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 
           <div style={{ flex: 1 }}>
             {/* Generate Button */}
-            <Button variant="contained" onClick={generatePalette} fullWidth>
+            <Button variant="outlined" onClick={generatePalette} fullWidth>
               Generate
             </Button>
           </div>
