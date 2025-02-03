@@ -31,7 +31,9 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
     setError(null);
 
     try {
-      const response = await fetch(`/api/palettes/${palette.paletteId}`, {
+      console.log("Updating palette name:", newName);
+      console.log(`Request put for /api/palettes/${palette.userId}/${palette.createdAt}`); // Check if route is hit DEBUG
+      const response = await fetch(`/api/palettes/${palette.userId}/${palette.createdAt}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName }),

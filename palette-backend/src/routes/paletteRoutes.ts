@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Test route
 router.get("/", (req: Request, res: Response) => {
-  console.log("Request received for /api"); // Check if route is hit DEBUG
+  // console.log("Request received for /api"); // Check if route is hit DEBUG
   res.send("Palette API is running...");
 });
 
@@ -18,16 +18,16 @@ router.get("/ichs", (req: Request, res: Response) => {
 
 // Get all palettes for a specific userId
 router.get("/palettes/:userId", async (req, res) => {
-  console.log("Request received for /palettes/:userId"); // Check if route is hit DEBUG
-  console.log("Request params:", req.params);
+  // console.log("Request received for /palettes/:userId"); // Check if route is hit DEBUG
+  // console.log("Request params:", req.params);
   try {
       const userId = req.params.userId;
-      console.log("Fetching palettes for userId:", userId); // Check userId
+      // console.log("Fetching palettes for userId:", userId); // Check userId
       const palettes = await PaletteModel.find({ userId });
-      console.log("Palettes found:", palettes); // Log the palettes
-      console.log("Sending JSON response:", JSON.stringify(palettes, null, 2)); // Stringify for logging
+      // console.log("Palettes found:", palettes); // Log the palettes
+      // console.log("Sending JSON response:", JSON.stringify(palettes, null, 2)); // Stringify for logging
       res.json(palettes);
-      console.log("Response sent successfully"); 
+      // console.log("Response sent successfully"); 
   } catch (error) {
       console.error("Error in /palettes/:userId:", error);
       res.status(500).json({ message: (error as Error).message });
@@ -58,7 +58,7 @@ router.delete("/palettes/user/:userId", async (req: Request, res: Response) => {
 
 // Generate a palette
 router.post("/palettes/generate", async (req: Request, res: Response) => {
-    console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
+    // console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     
     try {
       const { keywords, numColors, selectedColor, userId } = req.body;
@@ -100,8 +100,8 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         });
         await palette.save(); // Save the palette to the database
         
-        console.log("Palette Id:", palette.paletteId); //DEBUG   
-        console.log("Generated shades:", palette.shades); //DEBUG
+        // console.log("Palette Id:", palette.paletteId); //DEBUG   
+        // console.log("Generated shades:", palette.shades); //DEBUG
         res.status(201).json({
           paletteId: palette.paletteId,
           createdAt: palette.createdAt,
@@ -115,17 +115,17 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     }
   });
 
-    // Update palette name
-  router.put("/palettes/:userId/:paletteId", async (req, res) => {
-    console.log("Request received for /palettes/:userId/:paletteId"); // Check if route is hit DEBUG
+  // Update palette name
+  router.put("/palettes/:userId/:createdAt", async (req, res) => {
+    console.log("Request received for /palettes/:userId/:createdAt"); // Check if route is hit DEBUG
     const userId = req.params.userId;
-    const paletteId = req.params.paletteId;
+    const createdAt = req.params.createdAt;
     const name = req.body;
     
     try {
       console.log("Finding palettes for userId:", userId); // Check userId
       // Extract the palette using userId and paletteId
-      const palette = await PaletteModel.findOne({ userId, paletteId }); 
+      const palette = await PaletteModel.findOne({ userId, createdAt }); 
       console.log("Palette found:", palette); // Check if palette is found DEBUG
 
       if (!palette) {
@@ -133,7 +133,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
       } else {
         const newId = name + "\n" + palette.paletteId.split("\n")[1];
         palette.paletteId = newId; 
-        
+
         console.log("New palette's id:", newId); // Check newId DEBUG
         await palette.save();
 
