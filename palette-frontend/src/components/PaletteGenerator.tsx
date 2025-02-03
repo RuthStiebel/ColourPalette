@@ -214,7 +214,9 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
           </div>
         ) : (
           <div style={{ marginTop: '20px', minHeight: '150px' }}>
-            {palette && <PaletteDisplay palette={palette} />}
+          {palette && (
+            <PaletteDisplay palette={palette} />
+          )}          
           </div>
         )}
       </CardContent>
