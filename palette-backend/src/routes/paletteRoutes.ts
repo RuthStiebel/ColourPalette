@@ -116,20 +116,24 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
   });
 
     // Update palette name
-  router.put("/palettes/:paletteId", async (req, res) => {
-    console.log("HERE") //DEBUG
-    const { paletteId } = req.params;
-    const { name } = req.body;
-    console.log("Finding palette:", paletteId); // Check paletteId DEBUG
-    console.log("New palette's name:", name); // Check name DEBUG
+  router.put("/palettes/:userId/:paletteId", async (req, res) => {
+    console.log("Request received for /palettes/:userId/:paletteId"); // Check if route is hit DEBUG
+    const userId = req.params.userId;
+    const paletteId = req.params.paletteId;
+    const name = req.body;
     
     try {
-      const palette = await PaletteModel.findById(paletteId);
+      console.log("Finding palettes for userId:", userId); // Check userId
+      // Extract the palette using userId and paletteId
+      const palette = await PaletteModel.findOne({ userId, paletteId }); 
+      console.log("Palette found:", palette); // Check if palette is found DEBUG
+
       if (!palette) {
         res.status(404).json({ message: "Palette not found" });
       } else {
-        const newId = name +  palette.paletteId.split("\n")[1];
+        const newId = name + "\n" + palette.paletteId.split("\n")[1];
         palette.paletteId = newId; 
+        
         console.log("New palette's id:", newId); // Check newId DEBUG
         await palette.save();
 
