@@ -123,10 +123,8 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     const name = req.body;
     
     try {
-      console.log("Finding palettes for userId:", userId); // Check userId
-      // Extract the palette using userId and paletteId
+      // Extract the palette using userId and timestamp
       const palette = await PaletteModel.findOne({ userId, createdAt }); 
-      console.log("Palette found:", palette); // Check if palette is found DEBUG
 
       if (!palette) {
         res.status(404).json({ message: "Palette not found" });
@@ -134,9 +132,9 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         const newId = name + "\n" + palette.paletteId.split("\n")[1];
         palette.paletteId = newId; 
 
-        console.log("New palette's id:", newId); // Check newId DEBUG
+        console.log("New palette's id: ", newId); // Check newId DEBUG
         await palette.save();
-
+ 
         res.status(200).json({ message: "Palette updated successfully", palette });
       }
     } catch (error) {
