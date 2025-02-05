@@ -134,6 +134,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         palette.paletteId = newId; 
 
         console.log("New palette's id: ", JSON.stringify(newId)); // Check newId DEBUG
+        console.log("New palette's name: ", newId.split("\n")[0]); // Check newId DEBUG
         await palette.save();
  
         res.status(200).json({ message: "Palette updated successfully", palette });
