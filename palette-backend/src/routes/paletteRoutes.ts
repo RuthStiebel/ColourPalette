@@ -120,7 +120,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     console.log("Request received for /palettes/:userId/:createdAt"); // Check if route is hit DEBUG
     const userId = req.params.userId;
     const createdAt = req.params.createdAt;
-    const name = req.body;
+    const name = req.body.name;
     
     try {
       // Extract the palette using userId and timestamp
@@ -129,10 +129,11 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
       if (!palette) {
         res.status(404).json({ message: "Palette not found" });
       } else {
+        console.log("Updating palette name:", name); // DEBUG
         const newId = name + "\n" + palette.paletteId.split("\n")[1];
         palette.paletteId = newId; 
 
-        console.log("New palette's id: ", newId); // Check newId DEBUG
+        console.log("New palette's id: ", JSON.stringify(newId)); // Check newId DEBUG
         await palette.save();
  
         res.status(200).json({ message: "Palette updated successfully", palette });
