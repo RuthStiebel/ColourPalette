@@ -95,6 +95,7 @@ const App: React.FC = () => {
 
       const data: Palette = await response.json();
       console.log("Generated palette:", data); //DEBUG
+      
       // Update local state without fetching again
       setPalette(data);
       setUserPalettes((prev) => [...prev, data]);
@@ -128,6 +129,39 @@ const App: React.FC = () => {
       setUserPalettes([]);
     } catch (error) {
       console.error("Error clearing history:", error);
+    }
+  };
+
+  const editPaletteName = async () => {
+
+    if (!newName) {
+      setErrorMessage("Please enter a name.");
+      return;
+    }
+
+    setLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/palettes/${palette.userId}/${palette.createdAt}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: setErrorMessage }),
+      });
+      console.log ()
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || "Failed to update palette name");
+        return;
+      }
+      setIsEditing(false);
+     const updatedPalette = { ...palette, paletteName: newName };
+      onUpdate(updatedPalette); // Refresh UI after successful update
+    } catch (error) {
+      console.error("Error updating palette:", error);
+      setError("An error occurred while updating the palette.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,3 +207,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
