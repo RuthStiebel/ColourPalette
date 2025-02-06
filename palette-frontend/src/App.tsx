@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
+  const [newName, setNewName] = useState<string>(""); // State to store the new palette name
   const BACKEND_URL = "http://localhost:5000"; // Backend URL
   // const BACKEND_URL = "https://colourpalettebackend.onrender.com";
 
@@ -95,7 +96,7 @@ const App: React.FC = () => {
 
       const data: Palette = await response.json();
       console.log("Generated palette:", data); //DEBUG
-      
+
       // Update local state without fetching again
       setPalette(data);
       setUserPalettes((prev) => [...prev, data]);
@@ -133,9 +134,8 @@ const App: React.FC = () => {
   };
 
   const editPaletteName = async () => {
-
-    if (!newName) {
-      setErrorMessage("Please enter a name.");
+    if (!newName || !palette) {
+      setErrorMessage("Please enter a valid name.");
       return;
     }
 
@@ -146,20 +146,25 @@ const App: React.FC = () => {
       const response = await fetch(`${BACKEND_URL}/api/palettes/${palette.userId}/${palette.createdAt}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: setErrorMessage }),
+        body: JSON.stringify({ name: newName }),
       });
-      console.log ()
+
       if (!response.ok) {
         const data = await response.json();
-        setError(data.message || "Failed to update palette name");
+        setErrorMessage(data.message || "Failed to update palette name");
         return;
       }
-      setIsEditing(false);
-     const updatedPalette = { ...palette, paletteName: newName };
-      onUpdate(updatedPalette); // Refresh UI after successful update
+
+      // Update the local state with the new name
+      const updatedPalette: Palette = await response.json();;
+      setPalette(updatedPalette);
+      setUserPalettes((prev) => [...prev, updatedPalette]);
+
+      // Refresh the page to reflect the updated name
+      window.location.reload(); // This will reload the page to reflect the update
     } catch (error) {
       console.error("Error updating palette:", error);
-      setError("An error occurred while updating the palette.");
+      setErrorMessage("An error occurred while updating the palette.");
     } finally {
       setLoading(false);
     }
@@ -201,10 +206,24 @@ const App: React.FC = () => {
           setSelectedColor={setSelectedColor}
           palette={palette}
         />
+
+        {/* Edit Palette Name */}
+        <div>
+          {palette && (
+            <div>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Enter new palette name"
+              />
+              <button onClick={editPaletteName} disabled={loading}>Edit Name</button>
+            </div>
+          )}
+        </div>
       </Stack>
     </Container>
   );
 };
 
 export default App;
-
