@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Test route
 router.get("/", (req: Request, res: Response) => {
-  console.log("Request received for /api"); // Check if route is hit DEBUG
+  // console.log("Request received for /api"); // Check if route is hit DEBUG
   res.send("Palette API is running...");
 });
 
@@ -18,16 +18,16 @@ router.get("/ichs", (req: Request, res: Response) => {
 
 // Get all palettes for a specific userId
 router.get("/palettes/:userId", async (req, res) => {
-  console.log("Request received for /palettes/:userId"); // Check if route is hit DEBUG
-  console.log("Request params:", req.params);
+  // console.log("Request received for /palettes/:userId"); // Check if route is hit DEBUG
+  // console.log("Request params:", req.params);
   try {
       const userId = req.params.userId;
-      console.log("Fetching palettes for userId:", userId); // Check userId
+      // console.log("Fetching palettes for userId:", userId); // Check userId
       const palettes = await PaletteModel.find({ userId });
-      console.log("Palettes found:", palettes); // Log the palettes
-      console.log("Sending JSON response:", JSON.stringify(palettes, null, 2)); // Stringify for logging
+      // console.log("Palettes found:", palettes); // Log the palettes
+      // console.log("Sending JSON response:", JSON.stringify(palettes, null, 2)); // Stringify for logging
       res.json(palettes);
-      console.log("Response sent successfully"); 
+      // console.log("Response sent successfully"); 
   } catch (error) {
       console.error("Error in /palettes/:userId:", error);
       res.status(500).json({ message: (error as Error).message });
@@ -58,7 +58,7 @@ router.delete("/palettes/user/:userId", async (req: Request, res: Response) => {
 
 // Generate a palette
 router.post("/palettes/generate", async (req: Request, res: Response) => {
-    console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
+    // console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     
     try {
       const { keywords, numColors, selectedColor, userId } = req.body;
@@ -92,17 +92,19 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         const generatedShades = await generateShadesAndTints(generatedColors, generatedColors.length);
   
         const palette = new PaletteModel({
-          paletteId:  promptEntry + " \n" + new Date().toISOString(),
+          paletteId:  promptEntry + "\n" + new Date().toISOString(),
+          createdAt: new Date().toISOString(),
           userId: userId,
           colors : generatedColors,
           shades: [generatedShades[1], generatedShades[2]],
         });
         await palette.save(); // Save the palette to the database
         
-        console.log("Palette ID:", palette.paletteId); //DEBUG   
-        console.log("Generated shades:", palette.shades); //DEBUG
+        // console.log("Palette Id:", palette.paletteId); //DEBUG   
+        // console.log("Generated shades:", palette.shades); //DEBUG
         res.status(201).json({
           paletteId: palette.paletteId,
+          createdAt: palette.createdAt,
           userId: palette.userId,
           colors: palette.colors,
           shades: palette.shades,
@@ -113,13 +115,41 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
     }
   });
 
-  
+  // Update palette name
+  router.put("/palettes/:userId/:createdAt", async (req, res) => {
+    console.log("Request received for /palettes/:userId/:createdAt"); // Check if route is hit DEBUG
+    const userId = req.params.userId;
+    const createdAt = req.params.createdAt;
+    const name = req.body.name;
+    
+    try {
+      // Extract the palette using userId and timestamp
+      const palette = await PaletteModel.findOne({ userId, createdAt }); 
+
+      if (!palette) {
+        res.status(404).json({ message: "Palette not found" });
+      } else {
+        console.log("Updating palette name:", name); // DEBUG
+        const newId = name + "\n" + palette.paletteId.split("\n")[1];
+        palette.paletteId = newId; 
+
+        console.log("New palette's id: ", JSON.stringify(newId)); // Check newId DEBUG
+        console.log("New palette's name: ", newId.split("\n")[0]); // Check newId DEBUG
+        await palette.save();
+ 
+        res.status(200).json({ message: "Palette updated successfully", palette });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: (error as Error).message });
+    }
+  });
+
   
  /*
-  router.get("/palettes/:paletteId/shades", async (req: Request, res: Response) => {
+  router.get("/palettes/:paletteName/shades", async (req: Request, res: Response) => {
     try {
-        const paletteId = req.params.paletteId;
-        const palette = await Palette.findOne({ paletteId });
+        const paletteName = req.params.paletteName;
+        const palette = await Palette.findOne({ paletteName });
 
         if (!palette) {
             return res.status(404).json({ message: "Palette not found" });

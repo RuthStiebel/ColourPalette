@@ -39,7 +39,7 @@ export function generateRandomColors(num: number): Color[] {
       colors.push({ hex, rgb });
     } else {
       // Handle the case where the hex code is invalid
-      console.error("Generated invalid hex code:", hex);
+      // console.error("Generated invalid hex code:", hex);
       i--; // Decrement i to retry this color generation
     }
   }
@@ -103,17 +103,17 @@ export async function generateColors(cleanKeywords: string[], numColors: number,
     The colors should be visually appealing and suitable for use in a web design project.`;
 
     // Fetch response from OpenAI API
-    console.log("Prompt" + prompt); //DEBUG
+    //  console.log("Prompt" + prompt); //DEBUG
     const response = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 100,
     });
 
-    console.log("API response" + response); //DEBUG
+    // console.log("API response" + response); //DEBUG
     const content = response.choices[0]?.message?.content;
 
-    console.log("AI content" + content); //DEBUG
+    // console.log("AI content" + content); //DEBUG
     
     if (!content) {
       throw new Error("OpenAI API did not return a valid response.");
@@ -124,7 +124,7 @@ export async function generateColors(cleanKeywords: string[], numColors: number,
 
     return generatedColors;
   } catch (error) {
-    console.error("Error calling OpenAI:", error);
+    // console.error("Error calling OpenAI:", error);
     throw new Error("Failed to generate colors using OpenAI.");
   }
 }
@@ -168,7 +168,7 @@ export function generateShadesAndTints(colors: Color[], numColors: number): Colo
             }
         }
     }
-    console.log("Generated shades:", allPalettes); //DEBUG
+    // console.log("Generated shades:", allPalettes); //DEBUG
     return allPalettes;
 }
 

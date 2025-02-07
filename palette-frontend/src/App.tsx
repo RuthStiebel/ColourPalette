@@ -4,7 +4,7 @@ import { Palette } from "../../palette-backend/src/models/paletteModels";
 import UserHistory from "./components/UserHistory";
 import PaletteGenerator from './components/PaletteGenerator'; 
 import { Container, Stack } from "@mui/material";
-import { MAX_NUM_COLORS } from "./utils/globals";
+import { MAX_NUM_COLORS, BACKEND_URL } from "./utils/globals";
 
 const App: React.FC = () => {
   const [keywords, setKeywords] = useState<string>("");
@@ -19,6 +19,7 @@ const App: React.FC = () => {
   const [newName, setNewName] = useState<string>(""); // State to store the new palette name
   const BACKEND_URL = "http://localhost:5000"; // Backend URL
   // const BACKEND_URL = "https://colourpalettebackend.onrender.com";
+
 
   useEffect(() => {
     // Check if a userId is already in local storage
