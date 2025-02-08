@@ -16,7 +16,6 @@ const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
-  const [newName, setNewName] = useState<string>(""); // State to store the new palette name
 
   useEffect(() => {
     // Check if a userId is already in local storage
