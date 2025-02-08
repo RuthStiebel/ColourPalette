@@ -7,7 +7,7 @@ interface PaletteDisplayProps {
   palette: Palette | null;
 }
 
-const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
+const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
   const [newPalette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
@@ -82,6 +82,19 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
                   handleSaveClick();
                 }
               }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: 'black', 
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: 'black', // Change label color
+                },
+                "&.Mui-focused .MuiInputLabel-root": {
+                  color: 'black', // Change label color on focus
+                },
+              }}
             />
           ) : (
             <Typography variant="h6" style={{ marginBottom: "10px" }} fontWeight="bold">
@@ -89,11 +102,33 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
             </Typography>
           )}
           {isEditing ? (
-            <Button onClick={handleSaveClick} variant="contained" size="small" disabled={loading}>
+            <Button onClick={handleSaveClick} 
+                    variant="outlined" 
+                    size="small" 
+                    sx={{
+                      backgroundColor: "#ffffff", // White background
+                      color:"#6c6c6c", 
+                      borderColor: "#6c6c6c", 
+                      "&:hover": {
+                        backgroundColor:"#f3f3f3", 
+                      },
+                    }}
+                    disabled={loading}>
               {loading ? "Saving..." : "Save"}
             </Button>
           ) : (
-            <Button onClick={handleEditClick} variant="outlined" size="small">Edit</Button>
+            <Button onClick={handleEditClick} 
+                    variant="outlined" 
+                    size="small"
+                    sx={{
+                      backgroundColor: "#ffffff", // White background
+                      color:"#6c6c6c", 
+                      borderColor: "#6c6c6c", 
+                      "&:hover": {
+                        backgroundColor:"#f3f3f3", 
+                      },
+                    }}> Edit
+            </Button>
           )}
         </Stack>
         {error && <Typography color="error">{error}</Typography>}
