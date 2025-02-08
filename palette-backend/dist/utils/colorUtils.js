@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateNumColors = validateNumColors;
 exports.validateAndCleanKeywords = validateAndCleanKeywords;
-exports.generateColors = generateColors;
+exports.generateRandomColors = generateRandomColors;
 exports.parseHexColors = parseHexColors;
-exports.callOpenAI = callOpenAI;
+exports.generateColors = generateColors;
 exports.generateShadesAndTints = generateShadesAndTints;
 const openai_1 = __importDefault(require("../config/openai")); // Import the OpenAI client configuration
 // Validate the number of colors
@@ -30,7 +30,7 @@ function validateAndCleanKeywords(keywords) {
     return cleanKeywords;
 }
 // Generate random colors if no keywords are provided
-function generateColors(num) {
+function generateRandomColors(num) {
     const colors = [];
     for (let i = 0; i < num; i++) {
         // Generate a random hex color
@@ -44,7 +44,7 @@ function generateColors(num) {
         }
         else {
             // Handle the case where the hex code is invalid
-            console.error("Generated invalid hex code:", hex);
+            // console.error("Generated invalid hex code:", hex);
             i--; // Decrement i to retry this color generation
         }
     }
@@ -82,27 +82,32 @@ function parseHexColors(content, numColors) {
     }));
 }
 // Call OpenAI to generate colors based on keywords
-async function callOpenAI(cleanKeywords, numColors) {
+async function generateColors(cleanKeywords, numColors, selectedColor) {
     try {
         const client = await (0, openai_1.default)(); // Get the OpenAI client instance
         // Generate a prompt for OpenAI
-        const prompt = `Generate a harmonious color palette with ${numColors} colors. 
-    Keywords: ${cleanKeywords ? cleanKeywords.join(", ") : "none"}. 
-    Use principles of color theory to ensure the palette is cohesive 
+        let prompt = `Generate a harmonious color palette with ${numColors} colors.`;
+        if (cleanKeywords.length == 0) {
+            prompt += ` With ${selectedColor} as the main color.`;
+        }
+        else {
+            prompt += ` Keywords: ${cleanKeywords.join(", ")}.`;
+        }
+        prompt += `Use principles of color theory to ensure the palette is cohesive 
     (e.g., complementary, analogous, triadic, or monochromatic schemes). 
     Provide the colors in hex format along with descriptive names. 
     For example, you could use the following keywords: "ocean, sky, forest" to generate a nature-inspired palette. 
     The colors should be visually appealing and suitable for use in a web design project.`;
         // Fetch response from OpenAI API
-        console.log("Prompt" + prompt); //DEBUG
+        //  console.log("Prompt" + prompt); //DEBUG
         const response = await client.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 100,
         });
-        console.log("API response" + response); //DEBUG
+        // console.log("API response" + response); //DEBUG
         const content = response.choices[0]?.message?.content;
-        console.log("AI content" + content); //DEBUG
+        // console.log("AI content" + content); //DEBUG
         if (!content) {
             throw new Error("OpenAI API did not return a valid response.");
         }
@@ -111,7 +116,7 @@ async function callOpenAI(cleanKeywords, numColors) {
         return generatedColors;
     }
     catch (error) {
-        console.error("Error calling OpenAI:", error);
+        // console.error("Error calling OpenAI:", error);
         throw new Error("Failed to generate colors using OpenAI.");
     }
 }
@@ -151,6 +156,6 @@ function generateShadesAndTints(colors, numColors) {
             }
         }
     }
-    console.log("Generated shades:", allPalettes); //DEBUG
+    // console.log("Generated shades:", allPalettes); //DEBUG
     return allPalettes;
 }
