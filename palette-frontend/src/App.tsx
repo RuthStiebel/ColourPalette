@@ -17,9 +17,6 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const [newName, setNewName] = useState<string>(""); // State to store the new palette name
-  const BACKEND_URL = "http://localhost:5000"; // Backend URL
-  // const BACKEND_URL = "https://colourpalettebackend.onrender.com";
-
 
   useEffect(() => {
     // Check if a userId is already in local storage
