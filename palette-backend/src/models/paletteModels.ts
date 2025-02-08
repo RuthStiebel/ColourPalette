@@ -6,6 +6,7 @@ export interface Color {
 }
 export interface Palette extends Document {
   paletteId: string;
+  paletteName: string;
   userId: string;
   colors: Color[];
   createdAt: Date;
@@ -27,6 +28,7 @@ const ColorSchema: Schema<Color> = new Schema({
 // Define Palette Schema
 const PaletteSchema: Schema<Palette> = new Schema({
   paletteId: { type: String, required: true, unique: true },
+  paletteName: { type: String, required: true },
   userId: { type: String, required: true },
   colors: [ColorSchema],
   createdAt: { type: Date, default: Date.now },
