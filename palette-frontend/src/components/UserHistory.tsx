@@ -51,7 +51,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
               >
                 <CardContent>
                 <Typography color="textSecondary" fontWeight="normal" align="center" style={{ marginBottom: "8px" }}>
-                  {palette.paletteId.split("\n")[0]}
+                  {palette.paletteName}
                 </Typography>
 
                   <Stack direction="row" spacing={1} justifyContent="center">

@@ -93,6 +93,7 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
   
         const palette = new PaletteModel({
           paletteId:  promptEntry + "\n" + new Date().toISOString(),
+          paletteName: cleanKeywords ? cleanKeywords.join(",") : "Untitled Palette",
           createdAt: new Date().toISOString(),
           userId: userId,
           colors : generatedColors,
@@ -101,9 +102,10 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         await palette.save(); // Save the palette to the database
         
         // console.log("Palette Id:", palette.paletteId); //DEBUG   
-        // console.log("Generated shades:", palette.shades); //DEBUG
+        console.log("Palette name:", palette.paletteName); //DEBUG
         res.status(201).json({
           paletteId: palette.paletteId,
+          paletteName: palette.paletteName,
           createdAt: palette.createdAt,
           userId: palette.userId,
           colors: palette.colors,
@@ -130,11 +132,11 @@ router.post("/palettes/generate", async (req: Request, res: Response) => {
         res.status(404).json({ message: "Palette not found" });
       } else {
         console.log("Updating palette name:", name); // DEBUG
-        const newId = name + "\n" + palette.paletteId.split("\n")[1];
-        palette.paletteId = newId; 
+       // const newId = name + "\n" + palette.paletteId.split("\n")[1];
+        palette.paletteName = name; 
 
-        console.log("New palette's id: ", JSON.stringify(newId)); // Check newId DEBUG
-        console.log("New palette's name: ", newId.split("\n")[0]); // Check newId DEBUG
+        console.log("New palette's name: ", JSON.stringify(name)); // Check newId DEBUG
+       // console.log("New palette's name: ", newId.split("\n")[0]); // Check newId DEBUG
         await palette.save();
  
         res.status(200).json({ message: "Palette updated successfully", palette });
