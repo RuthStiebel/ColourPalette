@@ -9,6 +9,8 @@ interface PaletteDisplayProps {
 
 const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
+  const [newPalette, setPalette] = useState<Palette | null>(null);
+  const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -18,11 +20,9 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
 
   const handleEditClick = () => {
     setIsEditing(true);
-  //  setNewName(palette.paletteName); 
   };
 
-  const handleSaveClick = async () => {
-
+  const editPaletteName = async () => {
     if (!newName) {
       setError("Please enter a name.");
       return;
@@ -46,14 +46,23 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
         return;
       }
       setIsEditing(false);
-      // const updatedPalette = { ...palette, paletteName: newName };
-     // onUpdate(updatedPalette); // Refresh UI after successful update
+      // Update the local state with the new name
+      const updatedPalette: Palette = await response.json();;
+      setPalette(updatedPalette);
+      setUserPalettes((prev) => [...prev, updatedPalette]);
+      
+      // Refresh the page to reflect the updated name
+      window.location.reload(); // This will reload the page to reflect the update
     } catch (error) {
       console.error("Error updating palette:", error);
       setError("An error occurred while updating the palette.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSaveClick = () => {
+    editPaletteName();
   };
 
   return (
@@ -67,6 +76,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette}) => {
               variant="outlined"
               size="small"
               disabled={loading}
+              placeholder="Enter new palette name"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleSaveClick();
