@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Card, CardContent, Stack, Typography, Button, TextField } from "@mui/material";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 import { Palette } from "../../../palette-backend/src/models/paletteModels";
-import { BACKEND_URL } from "../utils/globals";
 
 interface PaletteDisplayProps {
   palette: Palette | null;
@@ -9,130 +8,15 @@ interface PaletteDisplayProps {
 
 const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
-  const [newPalette, setPalette] = useState<Palette | null>(null);
-  const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [newName, setNewName] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   if (!palette) return null;
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const editPaletteName = async () => {
-    if (!newName) {
-      setError("Please enter a name.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      console.log("Updating palette name:", newName);
-      console.log(`Request put for api/palettes/${palette.userId}/${palette.createdAt}`); // Check if route is hit DEBUG
-      const response = await fetch(`${BACKEND_URL}/api/palettes/${palette.userId}/${palette.createdAt}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName }),
-      });
-      console.log ()
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.message || "Failed to update palette name");
-        return;
-      }
-      setIsEditing(false);
-      // Update the local state with the new name
-      const updatedPalette: Palette = await response.json();;
-      setPalette(updatedPalette);
-      setUserPalettes((prev) => [...prev, updatedPalette]);
-      
-      // Refresh the page to reflect the updated name
-      window.location.reload(); // This will reload the page to reflect the update
-    } catch (error) {
-      console.error("Error updating palette:", error);
-      setError("An error occurred while updating the palette.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSaveClick = () => {
-    editPaletteName();
-  };
 
   return (
     <Card style={{ marginTop: "10px", borderRadius: "12px"}}>
       <CardContent>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {isEditing ? (
-            <TextField
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              variant="outlined"
-              size="small"
-              disabled={loading}
-              placeholder="Enter new palette name"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSaveClick();
-                }
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: 'black', 
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: 'black', // Change label color
-                },
-                "&.Mui-focused .MuiInputLabel-root": {
-                  color: 'black', // Change label color on focus
-                },
-              }}
-            />
-          ) : (
-            <Typography variant="h6" style={{ marginBottom: "10px" }} fontWeight="bold">
-              {palette.paletteId.split("\n")[0]}
-            </Typography>
-          )}
-          {isEditing ? (
-            <Button onClick={handleSaveClick} 
-                    variant="outlined" 
-                    size="small" 
-                    sx={{
-                      backgroundColor: "#ffffff", // White background
-                      color:"#6c6c6c", 
-                      borderColor: "#6c6c6c", 
-                      "&:hover": {
-                        backgroundColor:"#f3f3f3", 
-                      },
-                    }}
-                    disabled={loading}>
-              {loading ? "Saving..." : "Save"}
-            </Button>
-          ) : (
-            <Button onClick={handleEditClick} 
-                    variant="outlined" 
-                    size="small"
-                    sx={{
-                      backgroundColor: "#ffffff", // White background
-                      color:"#6c6c6c", 
-                      borderColor: "#6c6c6c", 
-                      "&:hover": {
-                        backgroundColor:"#f3f3f3", 
-                      },
-                    }}> Edit
-            </Button>
-          )}
-        </Stack>
-        {error && <Typography color="error">{error}</Typography>}
-
+        <Typography variant="h6" style={{ marginBottom: "10px" }} fontWeight="bold">
+          {palette.paletteName}
+        </Typography>
 
         {/* Colors Display */}
         <Stack direction="row" spacing={0} style={{ width: "100%" }}>
