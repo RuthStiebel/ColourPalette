@@ -215,7 +215,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         ) : (
           <div style={{ marginTop: '20px', minHeight: '150px' }}>
           {palette && (
-            <PaletteDisplay userPalette={palette} />
+            <PaletteDisplay palette={palette} />
           )}          
           </div>
         )}
