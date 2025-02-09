@@ -17,8 +17,17 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
       <Typography variant="h6" fontWeight="bold">
         {palette.paletteName}
       </Typography>
-      <Typography variant="body2" style={{ color: "gray", fontSize: "0.8rem", marginBottom: "10px" }}>
-        {new Date(palette.createdAt).toLocaleString()}
+      <Typography variant="body2" style={{ color: "gray", fontSize: "0.8rem", marginBottom: "15px"}}>
+        {new Date(palette.createdAt).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })}{" "}
+        {new Date(palette.createdAt).toLocaleTimeString([], { 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          hour12: false 
+        })}
       </Typography>
 
         {/* Colors Display */}
