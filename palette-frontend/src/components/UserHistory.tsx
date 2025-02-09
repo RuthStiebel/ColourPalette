@@ -49,41 +49,68 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               >
-                <CardContent>
-                <Typography color="textSecondary" fontWeight="normal" align="center" style={{ marginBottom: "8px" }}>
-                  {palette.paletteName}
-                </Typography>
+                  <CardContent>
+                      <Stack direction="column" spacing={0}>
+                        <Typography variant="h6" fontWeight="bold" style={{ marginBottom: "8px" }}>
+                          {palette.paletteName}
+                        </Typography>
+                      </Stack>
 
-                  <Stack direction="row" spacing={1} justifyContent="center">
-                    {palette.colors.map((color, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          width: "45px",
-                          height: "20px",
-                          backgroundColor: `rgb(${color.rgb.join(",")})`,
-                          borderRadius: "6px",
-                        }}
-                      />
-                    ))}
-                  </Stack>
+                    {/* Colors Display */}
+                    <Stack direction="row" spacing={0} style={{ width: "100%", marginTop: "8px" }}>
+                      {palette.colors.map((color, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            flexGrow: 1,
+                            height: "50px",
+                            backgroundColor: `rgb(${color.rgb.join(",")})`,
+                            position: "relative",
+                            cursor: "pointer",
+                            borderRadius:
+                              palette.colors.length === 1
+                                ? "10px 10px 0 0"
+                                : index === 0
+                                ? "10px 0 0 0"
+                                : index === palette.colors.length - 1
+                                ? "0 10px 0 0"
+                                : "0",
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                          }}
+                        />
+                      ))}
+                    </Stack>
 
-                  <Stack spacing={1} alignItems="center" style={{ marginTop: "8px" }}>
-                    {palette.shades.map((shadesRow, rowIndex) => (
-                      <Stack key={rowIndex} direction="row" spacing={1}>
-                        {shadesRow.map((shade, shadeIndex) => (
+
+                  {/* Shades Display */}
+                  <Stack direction="row" spacing={0} style={{ width: "100%"}}>
+                      {palette.shades[0].map((shade, shadeIndex) => (
+                        <React.Fragment key={shadeIndex}>
                           <div
-                            key={shadeIndex}
                             style={{
-                              width: "30px",
+                              flexGrow: 1,
                               height: "20px",
                               backgroundColor: `rgb(${shade.rgb.join(",")})`,
-                              borderRadius: "4px",
+                              borderRadius: shadeIndex === 0 ? "0 0 0 10px" : "0",
+                              cursor: "pointer",
+                              position: "relative",
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
                             }}
                           />
-                        ))}
-                      </Stack>
-                    ))}
+                          <div
+                            style={{
+                              flexGrow: 1,
+                              height: "20px",
+                              backgroundColor: `rgb(${palette.shades[1][shadeIndex].rgb.join(",")})`,
+                              borderRadius: shadeIndex === palette.colors.length - 1 ? "0 0 10px 0" : "0",
+                              cursor: "pointer",
+                              position: "relative",
+                            }}
+                          />
+                        </React.Fragment>
+                      ))}
                   </Stack>
                 </CardContent>
               </Card>
