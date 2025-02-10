@@ -16,6 +16,7 @@ interface PaletteGeneratorProps {
   selectedColor: string;
   setSelectedColor: React.Dispatch<React.SetStateAction<any>>;
   palette: any;
+  editPaletteName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
@@ -29,6 +30,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   selectedColor,
   setSelectedColor,
   palette,
+  editPaletteName,
 }) => {
   const [hovered, setHovered] = useState(false); // State to track hover
 
@@ -215,7 +217,7 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
         ) : (
           <div style={{ marginTop: '20px', minHeight: '150px' }}>
           {palette && (
-            <PaletteDisplay palette={palette} />
+            <PaletteDisplay palette={palette} editPaletteName={editPaletteName}/>
           )}          
           </div>
         )}

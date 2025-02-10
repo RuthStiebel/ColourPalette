@@ -4,9 +4,10 @@ import { Palette } from "../../../palette-backend/src/models/paletteModels";
 
 interface PaletteDisplayProps {
   palette: Palette | null;
+  editPaletteName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
+const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette, editPaletteName }) => {
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
 
   if (!palette) return null;
@@ -17,6 +18,7 @@ const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
       <Typography variant="h6" fontWeight="bold">
         {palette.paletteName}
       </Typography>
+      
       <Typography variant="body2" style={{ color: "gray", fontSize: "0.8rem", marginBottom: "15px"}}>
         {new Date(palette.createdAt).toLocaleDateString('en-US', { 
           year: 'numeric', 

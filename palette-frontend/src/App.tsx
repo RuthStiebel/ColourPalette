@@ -12,6 +12,7 @@ const App: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>('#FFFFFF'); // Store the selected color
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
+  const [paletteName, setPaletteName] = useState<Palette[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -130,6 +131,46 @@ const App: React.FC = () => {
     }
   };
 
+  const editPaletteName = async () => {
+      if (!paletteName) {
+        setErrorMessage("Please enter a name.");
+        return;
+      }
+  
+      setLoading(true);
+      setErrorMessage(null);
+  
+      try {
+        console.log("Updating palette name:", paletteName);
+        console.log(`Request put for api/palettes/${palette?.userId}/${palette?.createdAt}`); // Check if route is hit DEBUG
+        const response = await fetch(`${BACKEND_URL}/api/palettes/${palette?.userId}/${palette?.createdAt}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: setErrorMessage }),
+        });
+        console.log ()
+        if (!response.ok) {
+          const data = await response.json();
+          setErrorMessage(data.message || "Failed to update palette name");
+          return;
+        }
+  
+        // Update the local state with the new name
+        const updatedPalette: Palette = await response.json();
+  
+        setPalette(updatedPalette);
+      //  setUserPalettes((prev) => [...prev, updatedPalette]);
+        
+        // Refresh the page to reflect the updated name
+        //window.location.reload(); // This will reload the page to reflect the update
+      } catch (error) {
+        console.error("Error updating palette:", error);
+        setErrorMessage("An error occurred while updating the palette.");
+      } finally {
+        setLoading(false);
+      }
+  };
+
   return (
     <Container>
       <Stack direction="row" spacing={2}>
@@ -165,6 +206,7 @@ const App: React.FC = () => {
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
           palette={palette}
+          editPaletteName={editPaletteName}
         />
       </Stack>
     </Container>
