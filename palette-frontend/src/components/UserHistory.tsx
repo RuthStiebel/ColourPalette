@@ -63,7 +63,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
                           key={index}
                           style={{
                             flexGrow: 1,
-                            height: "50px",
+                            height: "40px",
                             backgroundColor: `rgb(${color.rgb.join(",")})`,
                             position: "relative",
                             cursor: "pointer",
@@ -90,7 +90,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
                           <div
                             style={{
                               flexGrow: 1,
-                              height: "20px",
+                              height: "15px",
                               backgroundColor: `rgb(${shade.rgb.join(",")})`,
                               borderRadius: shadeIndex === 0 ? "0 0 0 10px" : "0",
                               cursor: "pointer",
@@ -102,7 +102,7 @@ const PaletteHistory: React.FC<PaletteHistoryProps> = ({
                           <div
                             style={{
                               flexGrow: 1,
-                              height: "20px",
+                              height: "15px",
                               backgroundColor: `rgb(${palette.shades[1][shadeIndex].rgb.join(",")})`,
                               borderRadius: shadeIndex === palette.colors.length - 1 ? "0 0 10px 0" : "0",
                               cursor: "pointer",
