@@ -43,6 +43,7 @@ const ColorSchema = new mongoose_1.Schema({
 // Define Palette Schema
 const PaletteSchema = new mongoose_1.Schema({
     paletteId: { type: String, required: true, unique: true },
+    paletteName: { type: String, required: true },
     userId: { type: String, required: true },
     colors: [ColorSchema],
     createdAt: { type: Date, default: Date.now },
