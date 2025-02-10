@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { Button, Card, CardContent, Stack, TextField, Typography } from "@mui/material";
 import { Palette } from "../../../palette-backend/src/models/paletteModels";
 
 interface PaletteDisplayProps {
@@ -9,16 +9,29 @@ interface PaletteDisplayProps {
 
 const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette, editPaletteName }) => {
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
+  const [newName, setNewName] = useState<string>(palette?.paletteName || "");
+  const [loading, setLoading] = useState<boolean>(false);
 
   if (!palette) return null;
+
+  const handleSaveClick = () => {
+    if (newName !== palette.paletteName) {
+      setLoading(true);
+      editPaletteName(newName);
+      setLoading(false);  // After saving, you can handle it based on your logic (like calling an API)
+    }
+  };
 
   return (
     <Card style={{ marginTop: "10px", borderRadius: "12px"}}>
       <CardContent>
-      <Typography variant="h6" fontWeight="bold">
-        {palette.paletteName}
-      </Typography>
-      
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography variant="h6" fontWeight="bold">
+          {palette.paletteName}
+        </Typography>
+      </Stack>
+
+      {/* Date and Time Display */}
       <Typography variant="body2" style={{ color: "gray", fontSize: "0.8rem", marginBottom: "15px"}}>
         {new Date(palette.createdAt).toLocaleDateString('en-US', { 
           year: 'numeric', 
