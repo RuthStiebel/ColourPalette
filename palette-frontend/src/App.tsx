@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>('#FFFFFF'); // Store the selected color
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
-  const [paletteName, setPaletteName] = useState<Palette[]>([]);
+  //const [paletteName, setPaletteName] = useState<Palette[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -130,7 +130,7 @@ const App: React.FC = () => {
       console.error("Error clearing history:", error);
     }
   };
-
+/*
   const editPaletteName = async () => {
       if (!paletteName) {
         setErrorMessage("Please enter a name.");
@@ -170,7 +170,7 @@ const App: React.FC = () => {
         setLoading(false);
       }
   };
-
+*/
   return (
     <Container>
       <Stack direction="row" spacing={2}>
@@ -206,7 +206,7 @@ const App: React.FC = () => {
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
           palette={palette}
-          editPaletteName={editPaletteName}
+          //editPaletteName={editPaletteName}
         />
       </Stack>
     </Container>

@@ -4,10 +4,10 @@ import { Palette } from "../../../palette-backend/src/models/paletteModels";
 
 interface PaletteDisplayProps {
   palette: Palette | null;
-  editPaletteName: React.Dispatch<React.SetStateAction<string>>;
+ // editPaletteName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette, editPaletteName }) => {
+const PaletteDisplay: React.FC<PaletteDisplayProps> = ({ palette }) => {
   const [hoveredColor, setHoveredColor] = useState<string | null>(null);
   //const [newName, setNewName] = useState<string>(palette?.paletteName || "");
  // const [loading, setLoading] = useState<boolean>(false);
