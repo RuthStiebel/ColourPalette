@@ -17,6 +17,19 @@ const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
+  const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
+  
+  useEffect(() => {
+  const hasSeenPopup = localStorage.getItem("hasSeenPopup");
+    if (!hasSeenPopup) {
+      setShowInfoPopup(true);
+    }
+  }, []);
+
+  const closePopup = () => {
+    setShowInfoPopup(false);
+    localStorage.setItem("hasSeenPopup", "true");
+  };
 
   useEffect(() => {
     // Check if a userId is already in local storage
@@ -188,6 +201,28 @@ const App: React.FC = () => {
             }}
           >
             {popupMessage}
+          </div>
+        )}
+
+        {showInfoPopup && (
+          <div
+            style={{
+              position: "fixed",
+              top: "20px",
+              left: "20px",
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              zIndex: 1000,
+            }}
+          >
+            <p>
+              Welcome to Palette Generator! You can generate color palettes based on keywords and
+              the number of colors you want. You can also select a color to generate a palette based
+              on that color. Your generated palettes will be saved in your history.
+            </p>
+            <button onClick={closePopup}>Got it!</button>
           </div>
         )}
 
