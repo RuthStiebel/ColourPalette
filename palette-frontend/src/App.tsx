@@ -210,19 +210,20 @@ const App: React.FC = () => {
               position: "fixed",
               top: "20px",
               left: "20px",
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              backgroundColor: "rgba(84, 84, 84, 0.8)",
               color: "white",
               padding: "10px 20px",
               borderRadius: "8px",
               zIndex: 1000,
             }}
           >
-            <p>
-              Welcome to Palette Generator! You can generate color palettes based on keywords and
-              the number of colors you want. You can also select a color to generate a palette based
-              on that color. Your generated palettes will be saved in your history.
-            </p>
-            <button onClick={closePopup}>Got it!</button>
+            <h2>Welcome to the Color Palette Generator!</h2>
+            <p>You can generate color palettes based on keywords of your choice.</p>
+            <p>Or, alternatively you could select a color on which the palette generated would be based (or you can randomize it).</p>
+            <p>Either way, select the number of colors (up to {MAX_NUM_COLORS}).</p>
+            <p>Click "Generate" to create a unique color palette.</p>
+            <p>Your generated palettes will be saved in your history - to see them fully just press on them.</p>
+            <button onClick={closePopup} style={{ marginTop: "10px", padding: "8px 15px", cursor: "pointer" }}>Got it!</button>
           </div>
         )}
 
