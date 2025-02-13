@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Palette } from "../../palette-backend/src/models/paletteModels";
 import UserHistory from "./components/UserHistory";
 import PaletteGenerator from './components/PaletteGenerator'; 
-import { Container, Stack } from "@mui/material";
+import { Button, colors, Container, Stack } from "@mui/material";
 import { MAX_NUM_COLORS, BACKEND_URL } from "./utils/globals";
 
 const App: React.FC = () => {
@@ -20,7 +20,7 @@ const App: React.FC = () => {
   const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
   
   useEffect(() => {
-  const hasSeenPopup = localStorage.getItem("hasSeenPopup");
+    const hasSeenPopup = sessionStorage.getItem("hasSeenPopup");
     if (!hasSeenPopup) {
       setShowInfoPopup(true);
     }
@@ -28,7 +28,7 @@ const App: React.FC = () => {
 
   const closePopup = () => {
     setShowInfoPopup(false);
-    localStorage.setItem("hasSeenPopup", "true");
+    sessionStorage.setItem("hasSeenPopup", "true");
   };
 
   useEffect(() => {
@@ -223,7 +223,7 @@ const App: React.FC = () => {
             <p>Either way, select the number of colors (up to {MAX_NUM_COLORS}).</p>
             <p>Click "Generate" to create a unique color palette.</p>
             <p>Your generated palettes will be saved in your history - to see them fully just press on them.</p>
-            <button onClick={closePopup} style={{ marginTop: "10px", padding: "8px 15px", cursor: "pointer" }}>Got it!</button>
+            <Button onClick={closePopup} style={{ marginTop: "10px", padding: "8px 15px", cursor: "pointer" }} variant="outlined">Got it!</Button>
           </div>
         )}
 
