@@ -223,7 +223,17 @@ const App: React.FC = () => {
             <p>Either way, select the number of colors (up to {MAX_NUM_COLORS}).</p>
             <p>Click "Generate" to create a unique color palette.</p>
             <p>Your generated palettes will be saved in your history - to see them fully just press on them.</p>
-            <Button onClick={closePopup} style={{ marginTop: "10px", padding: "8px 15px", cursor: "pointer" }} variant="outlined">Got it!</Button>
+            <Button onClick={closePopup} 
+              style={{ marginTop: "10px", padding: "8px 15px", cursor: "pointer" }} 
+              variant="outlined"
+              sx={{
+                backgroundColor: "#ffffff", // White background
+                color: "#6c6c6c",
+                borderColor: "#6c6c6c",
+                "&:hover": {
+                  backgroundColor: "#f3f3f3",
+                },
+              }}>Got it!</Button>
           </div>
         )}
 
