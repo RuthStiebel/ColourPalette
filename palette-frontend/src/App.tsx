@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Palette } from "../../palette-backend/src/models/paletteModels";
 import UserHistory from "./components/UserHistory";
-import PaletteGenerator from './components/PaletteGenerator'; 
-import { Button, colors, Container, Stack } from "@mui/material";
+import PaletteGenerator from "./components/PaletteGenerator";
+import { Button, Container, Stack } from "@mui/material";
 import { MAX_NUM_COLORS, BACKEND_URL } from "./utils/globals";
 
 const App: React.FC = () => {
   const [keywords, setKeywords] = useState<string>("");
   const [numColors, setNumColors] = useState<number>(5);
-  const [selectedColor, setSelectedColor] = useState<string>('#FFFFFF'); // Store the selected color
+  const [selectedColor, setSelectedColor] = useState<string>("#FFFFFF"); // Store the selected color
   const [palette, setPalette] = useState<Palette | null>(null);
   const [userPalettes, setUserPalettes] = useState<Palette[]>([]);
   //const [paletteName, setPaletteName] = useState<Palette[]>([]);
@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
-  
+
   useEffect(() => {
     const hasSeenPopup = sessionStorage.getItem("hasSeenPopup");
     if (!hasSeenPopup) {
@@ -42,13 +42,13 @@ const App: React.FC = () => {
       // If it doesn't exist, generate a new UUID
       const newUserId = uuidv4();
       setUserId(newUserId);
-      localStorage.setItem("userId", newUserId); 
+      localStorage.setItem("userId", newUserId);
       console.log("new user id is: ", newUserId); //DEBUG
     }
   }, []);
 
   const fetchUserPalettes = async () => {
-    if (!userId) return;  // Check if userId is available before fetching palettes
+    if (!userId) return; // Check if userId is available before fetching palettes
 
     try {
       console.log("Fetching user palettes for userId:", userId); //DEBUG
@@ -73,14 +73,16 @@ const App: React.FC = () => {
 
     // Validate numColors input
     if (numColors > MAX_NUM_COLORS) {
-      showPopupMessage(`The number of colors must be ${MAX_NUM_COLORS} or less.`);
+      showPopupMessage(
+        `The number of colors must be ${MAX_NUM_COLORS} or less.`
+      );
       return; // Prevent palette generation if numColors is invalid
     }
 
     // Clear any previous error message
     setErrorMessage(null);
     setLoading(true);
-    
+
     const requestData = {
       keywords: keywords,
       numColors,
@@ -97,10 +99,13 @@ const App: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        if (response.status === 429) { // Handle the daily limit case
+        if (response.status === 429) {
+          // Handle the daily limit case
           showPopupMessage(errorData.message || "Daily limit reached.");
         } else {
-          throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+          throw new Error(
+            errorData.message || `HTTP error! Status: ${response.status}`
+          );
         }
         return;
       }
@@ -111,11 +116,17 @@ const App: React.FC = () => {
       // Update local state without fetching again
       setPalette(data);
       setUserPalettes((prev) => [...prev, data]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error generating palette:", err);
-      setErrorMessage(err.message || "An error occurred.");
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+          ? err
+          : "An error occurred.";
+      setErrorMessage(message);
     } finally {
-      setLoading(false); // End loading 
+      setLoading(false); // End loading
     }
   };
 
@@ -129,7 +140,10 @@ const App: React.FC = () => {
 
     try {
       // Clear from backend
-      const response = await fetch(`${BACKEND_URL}/api/palettes/user/${userId}`, { method: "DELETE" });
+      const response = await fetch(
+        `${BACKEND_URL}/api/palettes/user/${userId}`,
+        { method: "DELETE" }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to delete: ${response.statusText}`);
@@ -143,7 +157,7 @@ const App: React.FC = () => {
       console.error("Error clearing history:", error);
     }
   };
-/*
+  /*
   const editPaletteName = async () => {
       if (!paletteName) {
         setErrorMessage("Please enter a name.");
@@ -218,13 +232,28 @@ const App: React.FC = () => {
             }}
           >
             <h2>Welcome to the Color Palette Generator!</h2>
-            <p>You can generate color palettes based on keywords of your choice.</p>
-            <p>Or, alternatively you could select a color on which the palette generated would be based (or you can randomize it).</p>
-            <p>Either way, select the number of colors (up to {MAX_NUM_COLORS}).</p>
+            <p>
+              You can generate color palettes based on keywords of your choice.
+            </p>
+            <p>
+              Or, alternatively you could select a color on which the palette
+              generated would be based (or you can randomize it).
+            </p>
+            <p>
+              Either way, select the number of colors (up to {MAX_NUM_COLORS}).
+            </p>
             <p>Click "Generate" to create a unique color palette.</p>
-            <p>Your generated palettes will be saved in your history - to see them fully just press on them.</p>
-            <Button onClick={closePopup} 
-              style={{ marginTop: "10px", padding: "8px 15px", cursor: "pointer" }} 
+            <p>
+              Your generated palettes will be saved in your history - to see
+              them fully just press on them.
+            </p>
+            <Button
+              onClick={closePopup}
+              style={{
+                marginTop: "10px",
+                padding: "8px 15px",
+                cursor: "pointer",
+              }}
               variant="outlined"
               sx={{
                 backgroundColor: "#ffffff", // White background
@@ -233,12 +262,19 @@ const App: React.FC = () => {
                 "&:hover": {
                   backgroundColor: "#f3f3f3",
                 },
-              }}>Got it!</Button>
+              }}
+            >
+              Got it!
+            </Button>
           </div>
         )}
 
         {/* User History Section */}
-        <UserHistory userPalettes={userPalettes} onSelectPalette={setPalette} clearHistory={clearHistory} />
+        <UserHistory
+          userPalettes={userPalettes}
+          onSelectPalette={setPalette}
+          clearHistory={clearHistory}
+        />
 
         {/* Palette Generator Section with the card */}
         <PaletteGenerator
