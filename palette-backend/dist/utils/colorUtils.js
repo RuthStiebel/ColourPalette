@@ -1,15 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateNumColors = validateNumColors;
 exports.validateAndCleanKeywords = validateAndCleanKeywords;
 exports.generateRandomColors = generateRandomColors;
 exports.parseHexColors = parseHexColors;
-exports.generateColors = generateColors;
 exports.generateShadesAndTints = generateShadesAndTints;
-const openai_1 = __importDefault(require("../config/openai")); // Import the OpenAI client configuration
 // Validate the number of colors
 function validateNumColors(numColors) {
     if (!numColors || isNaN(numColors) || numColors <= 0) {
@@ -23,39 +18,57 @@ function validateAndCleanKeywords(keywords) {
     if (typeof keywords !== "string") {
         throw new Error("Invalid keywords format. Keywords must be a string.");
     }
-    const cleanKeywords = keywords.trim().split(",").map((keyword) => keyword.trim());
+    const cleanKeywords = keywords
+        .trim()
+        .split(",")
+        .map((keyword) => keyword.trim());
     if (cleanKeywords.some((keyword) => keyword === "")) {
         throw new Error("Keywords cannot contain only whitespace.");
     }
     return cleanKeywords;
 }
 // Generate random colors if no keywords are provided
-function generateRandomColors(num) {
+function generateRandomColors(selectedColor, num) {
     const colors = [];
+    const baseRgb = hexToRgb(selectedColor);
+    if (!baseRgb) {
+        console.error("Invalid base hex code:", selectedColor);
+        return colors;
+    }
+    // Convert base color to HSL for cohesive manipulation
+    const [h, s, l] = rgbToHsl(baseRgb[0], baseRgb[1], baseRgb[2]);
     for (let i = 0; i < num; i++) {
-        // Generate a random hex color
-        let hex = "#";
-        for (let j = 0; j < 6; j++) {
-            hex += Math.floor(Math.random() * 16).toString(16);
+        // 1. Shift Hue: Shift by 15 degrees per step to create an "Analogous" palette.
+        // Centering the shift so the original color is near the middle of the palette.
+        const hueShift = (i - Math.floor(num / 2)) * 15;
+        let newH = (h + hueShift) % 360;
+        if (newH < 0)
+            newH += 360; // Keep hue within 0-360 degrees
+        // 2. Shift Lightness: Slightly vary lightness to ensure the colors are distinguishable.
+        let newL = l;
+        if (num > 1) {
+            // Shift lightness by up to +/- 20% across the palette length
+            const lightnessShift = (i / (num - 1) - 0.5) * 0.4;
+            // Clamp lightness between 10% and 90% so it doesn't turn pure white or black
+            newL = Math.max(0.1, Math.min(0.9, l + lightnessShift));
         }
-        const rgb = hexToRgb(hex);
-        if (rgb) { // Check if rgb conversion was successful
-            colors.push({ hex, rgb });
-        }
-        else {
-            // Handle the case where the hex code is invalid
-            // console.error("Generated invalid hex code:", hex);
-            i--; // Decrement i to retry this color generation
-        }
+        // Convert back to RGB and Hex
+        const rgb = hslToRgb(newH, s, newL);
+        const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+        colors.push({ hex, rgb });
     }
     return colors;
 }
+//Helper functions for color conversions
 // Convert RGB to hex
 function rgbToHex(r, g, b) {
-    return "#" + [r, g, b].map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
+    return ("#" +
+        [r, g, b]
+            .map((x) => {
+            const hex = x.toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        })
+            .join(""));
 }
 // Convert hex to RGB
 function hexToRgb(hex) {
@@ -70,6 +83,58 @@ function hexToRgb(hex) {
     }
     return [r, g, b];
 }
+function rgbToHsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h /= 6;
+    }
+    return [h * 360, s, l];
+}
+function hslToRgb(h, s, l) {
+    h /= 360;
+    let r, g, b;
+    if (s === 0) {
+        r = g = b = l; // achromatic
+    }
+    else {
+        const hue2rgb = (p, q, t) => {
+            if (t < 0)
+                t += 1;
+            if (t > 1)
+                t -= 1;
+            if (t < 1 / 6)
+                return p + (q - p) * 6 * t;
+            if (t < 1 / 2)
+                return q;
+            if (t < 2 / 3)
+                return p + (q - p) * (2 / 3 - t) * 6;
+            return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1 / 3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
 // Parse hex colors from OpenAI response
 function parseHexColors(content, numColors) {
     const hexColors = content.match(/#[a-fA-F0-9]{6}/g);
@@ -81,48 +146,56 @@ function parseHexColors(content, numColors) {
         rgb: hexToRgb(hex),
     }));
 }
+/*
 // Call OpenAI to generate colors based on keywords
-async function generateColors(cleanKeywords, numColors, selectedColor) {
-    try {
-        const client = await (0, openai_1.default)(); // Get the OpenAI client instance
-        // Generate a prompt for OpenAI
-        let prompt = `Generate a harmonious color palette with ${numColors} colors.`;
-        if (cleanKeywords.length == 0) {
-            prompt += ` With ${selectedColor} as the main color.`;
-        }
-        else {
-            prompt += ` Keywords: ${cleanKeywords.join(", ")}.`;
-        }
-        prompt += `Use principles of color theory to ensure the palette is cohesive 
-    (e.g., complementary, analogous, triadic, or monochromatic schemes). 
-    Provide the colors in hex format along with descriptive names. 
-    For example, you could use the following keywords: "ocean, sky, forest" to generate a nature-inspired palette. 
+export async function generateColors(cleanKeywords: string[], numColors: number, selectedColor: string): Promise<Color[]> {
+  try {
+    const client = await getOpenAIClient(); // Get the OpenAI client instance
+    
+    // Generate a prompt for OpenAI
+    let prompt = `Generate a harmonious color palette with ${numColors} colors.`;
+     if (cleanKeywords.length == 0) {
+        prompt += ` With ${selectedColor} as the main color.`;
+    }
+    else {
+        prompt += ` Keywords: ${cleanKeywords.join(", ")}.`;
+    }
+    prompt += `Use principles of color theory to ensure the palette is cohesive
+    (e.g., complementary, analogous, triadic, or monochromatic schemes).
+    Provide the colors in hex format along with descriptive names.
+    For example, you could use the following keywords: "ocean, sky, forest" to generate a nature-inspired palette.
     The colors should be visually appealing and suitable for use in a web design project.`;
-        // Fetch response from OpenAI API
-        //  console.log("Prompt" + prompt); //DEBUG
-        const response = await client.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 100,
-        });
-        // console.log("API response" + response); //DEBUG
-        const content = response.choices[0]?.message?.content;
-        // console.log("AI content" + content); //DEBUG
-        if (!content) {
-            throw new Error("OpenAI API did not return a valid response.");
-        }
-        // Extract color codes from response
-        const generatedColors = parseHexColors(content, numColors);
-        return generatedColors;
+
+    // Fetch response from OpenAI API
+    //  console.log("Prompt" + prompt); //DEBUG
+    const response = await client.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 100,
+    });
+
+    // console.log("API response" + response); //DEBUG
+    const content = response.choices[0]?.message?.content;
+
+    // console.log("AI content" + content); //DEBUG
+    
+    if (!content) {
+      throw new Error("OpenAI API did not return a valid response.");
     }
-    catch (error) {
-        // console.error("Error calling OpenAI:", error);
-        throw new Error("Failed to generate colors using OpenAI.");
-    }
+    
+    // Extract color codes from response
+    const generatedColors = parseHexColors(content, numColors)
+
+    return generatedColors;
+  } catch (error) {
+    // console.error("Error calling OpenAI:", error);
+    throw new Error("Failed to generate colors using OpenAI.");
+  }
 }
+*/
 // Function to lighten or darken a color
 function adjustColor(rgb, amount) {
-    return rgb.map(c => {
+    return rgb.map((c) => {
         let newC = c + amount;
         newC = Math.max(0, Math.min(255, newC)); // Clamp between 0 and 255
         return newC;

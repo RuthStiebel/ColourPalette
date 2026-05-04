@@ -10,11 +10,8 @@ const colorUtils_1 = require("../utils/colorUtils");
 const router = express_1.default.Router();
 // Test route
 router.get("/", (req, res) => {
-    // console.log("Request received for /api"); // Check if route is hit DEBUG
+    console.log("Request received for /api"); // Check if route is hit DEBUG
     res.send("Palette API is running...");
-});
-router.get("/ichs", (req, res) => {
-    res.send("Palette API ichs is running...");
 });
 // Get all palettes for a specific userId
 router.get("/palettes/:userId", async (req, res) => {
@@ -27,7 +24,7 @@ router.get("/palettes/:userId", async (req, res) => {
         // console.log("Palettes found:", palettes); // Log the palettes
         // console.log("Sending JSON response:", JSON.stringify(palettes, null, 2)); // Stringify for logging
         res.json(palettes);
-        // console.log("Response sent successfully"); 
+        // console.log("Response sent successfully");
     }
     catch (error) {
         console.error("Error in /palettes/:userId:", error);
@@ -56,7 +53,7 @@ router.delete("/palettes/user/:userId", async (req, res) => {
 });
 // Generate a palette
 router.post("/palettes/generate", async (req, res) => {
-    // console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
+    console.log("Incoming Request Data:", req.body); // Log the incoming JSON DEBUG
     try {
         const { keywords, numColors, selectedColor, userId } = req.body;
         // Check the user's daily limit
@@ -72,25 +69,30 @@ router.post("/palettes/generate", async (req, res) => {
             (0, colorUtils_1.validateNumColors)(numColors);
             const cleanKeywords = (0, colorUtils_1.validateAndCleanKeywords)(keywords);
             let generatedColors;
+            console.log("Generated colors with no keywords:"); // DEBUG
+            generatedColors = await (0, colorUtils_1.generateRandomColors)(selectedColor, numColors);
+            /*
             if (cleanKeywords == null) {
-                generatedColors = await (0, colorUtils_1.generateColors)([], numColors, selectedColor);
+            } else {
+              console.log("Generated colors with keywords:"); // DEBUG
+              //  generatedColors = await generateColors(cleanKeywords, numColors, "");
             }
-            else {
-                generatedColors = await (0, colorUtils_1.generateColors)(cleanKeywords, numColors, '');
-            }
+      */
             // Create a new palette
             const promptEntry = `Generated palette with ${cleanKeywords ? "keywords: " + cleanKeywords.join(", ") : "no keywords"}.`;
             const generatedShades = await (0, colorUtils_1.generateShadesAndTints)(generatedColors, generatedColors.length);
             const palette = new paletteModels_1.PaletteModel({
                 paletteId: promptEntry + "\n" + new Date().toISOString(),
-                paletteName: cleanKeywords ? cleanKeywords.join(",") : "Untitled Palette",
+                paletteName: cleanKeywords
+                    ? cleanKeywords.join(",")
+                    : "Untitled Palette",
                 createdAt: new Date().toISOString(),
                 userId: userId,
                 colors: generatedColors,
                 shades: [generatedShades[1], generatedShades[2]],
             });
             await palette.save(); // Save the palette to the database
-            // console.log("Palette Id:", palette.paletteId); //DEBUG   
+            // console.log("Palette Id:", palette.paletteId); //DEBUG
             console.log("Palette name:", palette.paletteName); //DEBUG
             res.status(201).json({
                 paletteId: palette.paletteId,
@@ -125,31 +127,35 @@ router.put("/palettes/:userId/:createdAt", async (req, res) => {
             console.log("New palette's name: ", JSON.stringify(name)); // Check newId DEBUG
             // console.log("New palette's name: ", newId.split("\n")[0]); // Check newId DEBUG
             await palette.save();
-            res.status(200).json({ message: "Palette updated successfully", palette });
+            res
+                .status(200)
+                .json({ message: "Palette updated successfully", palette });
         }
     }
     catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res
+            .status(500)
+            .json({ message: "Server error", error: error.message });
     }
 });
 /*
- router.get("/palettes/:paletteName/shades", async (req: Request, res: Response) => {
-   try {
-       const paletteName = req.params.paletteName;
-       const palette = await Palette.findOne({ paletteName });
+  router.get("/palettes/:paletteName/shades", async (req: Request, res: Response) => {
+    try {
+        const paletteName = req.params.paletteName;
+        const palette = await Palette.findOne({ paletteName });
 
-       if (!palette) {
-           return res.status(404).json({ message: "Palette not found" });
-       }
-       if (palette.shades.length == 0) {
-           const generatedShades = await generateShadesAndTints(palette.colors, palette.colors.length);
-           palette.shades = [generatedShades[1], generatedShades[2], generatedShades[3], generatedShades[4]];
-           await palette.save()
-       }
-       res.json(palette.shades);
-   } catch (error) {
-       console.error("Error fetching shades:", error);
-       res.status(500).json({ message: (error as Error).message });
-   }
- });*/
+        if (!palette) {
+            return res.status(404).json({ message: "Palette not found" });
+        }
+        if (palette.shades.length == 0) {
+            const generatedShades = await generateShadesAndTints(palette.colors, palette.colors.length);
+            palette.shades = [generatedShades[1], generatedShades[2], generatedShades[3], generatedShades[4]];
+            await palette.save()
+        }
+        res.json(palette.shades);
+    } catch (error) {
+        console.error("Error fetching shades:", error);
+        res.status(500).json({ message: (error as Error).message });
+    }
+  });*/
 exports.default = router;
