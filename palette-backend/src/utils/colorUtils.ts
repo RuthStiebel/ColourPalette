@@ -27,9 +27,34 @@ export function validateAndCleanKeywords(keywords: any): string[] | null {
   return cleanKeywords;
 }
 
-// Generate random colors if no keywords are provided
+export function generateRandomColors(num: number): Color[] {
+  const colors: { rgb: [number, number, number]; hex: string }[] = [];
 
-export function generateRandomColors(
+  for (let i = 0; i < num; i++) {
+    // Generate a random hex color
+
+    let hex = "#";
+
+    for (let j = 0; j < 6; j++) {
+      hex += Math.floor(Math.random() * 16).toString(16);
+    }
+
+    const rgb = hexToRgb(hex);
+
+    if (rgb) {
+      // Check if rgb conversion was successful
+      colors.push({ hex, rgb });
+    } else {
+      // Handle the case where the hex code is invalid
+      // console.error("Generated invalid hex code:", hex);
+      i--; // Decrement i to retry this color generation
+    }
+  }
+
+  return colors;
+}
+// Generate random colors if no keywords are provided
+export function generateNoInputColors(
   selectedColor: string,
   num: number,
 ): Color[] {
